@@ -1,9 +1,7 @@
-import { inject, Injectable, signal } from '@angular/core';
-
+import { inject, Injectable } from '@angular/core';
 import { Auth, authState, GoogleAuthProvider, signInWithPopup, signOut, User, UserCredential } from '@angular/fire/auth';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-
 
 
 @Injectable({
@@ -37,38 +35,12 @@ export class AuthService {
   }
 
 
-  // loginWithGoogle(): Promise<User | null> {
-  //   const provider = new GoogleAuthProvider(); // crear proveedor de autenticación de Google
-
-  //   provider.setCustomParameters({
-  //     prompt: 'select_account'
-  //   });
-  //   provider.addScope('email');
-
-  //   return signInWithPopup(this.auth, provider)
-  //     .then((result) => {
-  //       //const user = result.user;
-  //       return result.user; //devuelve datos de usuario
-
-
-  //       console.log('Usuario logueado:', result.user); // aqui para ver los que me interesan
-  //       //return result.user; //devuelve datos de usuario
-  //       //this.router.navigate(['/chat']);
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error al loguearse con Google: ', error);
-  //       throw error;
-  //     });
-  // }
-
   loginGoogle() {
     const provider = new GoogleAuthProvider(); // crear proveedor de autenticación de Google
 
     provider.setCustomParameters({
       prompt: 'select_account'
     });
-    //provider.addScope('email');
-
 
     return signInWithPopup(this.auth, provider)
       .then((result: UserCredential) => {
@@ -80,19 +52,16 @@ export class AuthService {
 
         return user; //devuelve datos de usuario
 
-        //this.router.navigate(['/chat']);
       })
       .catch((error) => {
         console.error('Error al loguearse con Google: ', error);
         throw error;
       });
-
   }
 
   logOut(): Promise<void> {
     return signOut(this.auth)
       .then(() => {
-
         this.router.navigate(['/login'])
       })
       .catch((error) => {
