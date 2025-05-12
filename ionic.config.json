@@ -1,0 +1,7 @@
+{
+  "name": "non-stop-chat",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
