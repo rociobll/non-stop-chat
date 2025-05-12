@@ -1,10 +1,18 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
-
+  
 export const environment = {
-  production: false
+  production: false,
+  firebaseConfig: {
+    apiKey: "AIzaSyCnSR3Pw6B2Ar61nBjIDKiwDb30Zp3kjzM",
+    authDomain: "chat-de-rocio.firebaseapp.com",
+    databaseURL: "https://chat-de-rocio-default-rtdb.europe-west1.firebasedatabase.app", //añado esta líne o me daba errro de star en diferentes horarios
+    projectId: "chat-de-rocio",
+    storageBucket: "chat-de-rocio.firebasestorage.app",
+    messagingSenderId: "1028505790190",
+    appId: "1:1028505790190:web:5fc640400c84aa75d0f5ff",
+    measurementId: "G-XEJWCEB7ND",
+  }
 };
+
 
 /*
  * For easier debugging in development mode, you can import the following file
