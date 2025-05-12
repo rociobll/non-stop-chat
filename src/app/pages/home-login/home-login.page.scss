@@ -1,0 +1,106 @@
+
+.user-logged-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  height: 100%;
+  padding: 2rem;
+ gap: 2rem;
+ flex-wrap: wrap;
+ }
+
+ ion-button {
+  margin-top: 1.5rem;
+ }
+
+ .left-page, .right-page {
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 250px;
+  text-align: center;
+ }
+
+ .left-page {
+  margin-top: 1rem !important;
+ }
+
+ .login-logo {
+  width: 60%;
+  height: auto;
+ margin-top: 2rem;
+
+}
+
+ ion-avatar {
+  width: 100px;
+  height: 100px;
+  margin-right: 15px;
+ }
+
+ h6 {
+  margin-top: 10%;
+  font-size: 0.8rem;
+ }
+
+ .logo.col {
+  text-align: center;
+}
+
+.login-box {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+
+.wellcome h3{
+  margin-top: 1.5rem;
+  font-size: 1.3rem;
+}
+
+ .login-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+    --background:
+      linear-gradient(to bottom, #f7b5f3, rgb(153, 195, 204));
+}
+
+.guest-user {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 80%;
+  text-align: center;
+  padding: 6.5rem;
+}
+
+.guest-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  margin-bottom: 20px;
+}
+
+.login-terms {
+  font-size: 13px;
+}
+
+.google-icon {
+  margin-right: 15px;
+}
+
+.terms-link {
+  text-decoration: underline;
+  color: blue;
+  cursor: pointer;
+
+}
+
+h2 {
+  font-weight: 600;
+}
+
+

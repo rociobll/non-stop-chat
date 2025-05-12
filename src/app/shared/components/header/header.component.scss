@@ -1,0 +1,86 @@
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 8px;
+}
+
+ion-toolbar {
+  --background: rgb(105, 201, 230);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.icon-name {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-right: 25px;
+}
+
+ion-icon {
+  margin-right: 6px;
+}
+
+.logo {
+  width: 30vw;
+  max-width: 80px;
+  min-width: 15px;
+  height: auto;
+
+}
+
+.log-in-out {
+  font-size: 3rem;
+}
+
+.app-name {
+  color: rgb(16, 14, 18);
+  font-size: clamp(1.1rem,4vw,1.7rem);
+  font-weight: bold;
+  flex: 1;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+.user-name {
+  font-size: clamp(0.7rem,3vw,0.3rem);
+
+}
+
+.options
+.option-login {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+}
+
+ion-avatar {
+  width: 40px;
+  height: 40px;
+}
+
+ion-buttons {
+  display: flex;
+  align-items: center;
+
+}
+ion-button {
+  font-size: clamp(0.7rem,3vw,0.3rem);
+  // font-size: 0.8rem;
+  font-weight: 800;
+}
+
+
+

@@ -1,0 +1,56 @@
+
+<ion-content [fullscreen]="true" class="login-content">
+  <!-- <ion-img src="../../../assets/icon/chat-icon2.png" alt="logo de chat 2" class="login-logo"></ion-img> -->
+
+  @if(user$ | async; as user) {
+  <div class="user-logged-container">
+    <div class="left-page">
+      <ion-avatar>
+        <ion-img [src]="user.photoURL"></ion-img>
+      </ion-avatar>
+      <ion-text>
+        <h6>{{ user.displayName}}</h6>
+        <p>{{ user.email }}</p>
+      </ion-text>
+      <ion-button expand="full" color="info" (click)="logOut()"> CERRAR SESIÓN
+      <ion-icon slot="start" name="logo-google" class="google-icon"></ion-icon>
+
+    </ion-button>
+    </div>
+
+    <div class="right-page">
+      <ion-img src="../../../assets/icon/chat-icon2.png" alt="logo de chat 2" class="login-logo"></ion-img>
+
+      <ion-text>
+        <h3>¿Quieres seguir chateando {{user.displayName}}?</h3>
+      </ion-text>
+      <ion-button expand="full" [routerLink]="['/chat']" routerLinkActive="router-link-active" color="primary">Volver al
+        chat</ion-button>
+
+    </div>
+
+  </div>
+
+
+  <!-- cuando no hay usuario logueado -->
+  } @else {
+  <div class="guest-user">
+    <ion-img src="../../../assets/icon/chat-icon2.png" alt="logo de chat 2" class="guest-logo"></ion-img>
+    <ion-text>
+      <h2>Bienvenidos/as a Non Stop Chat</h2>
+      <p>Disfruta de la experiencia con nuestro chat en tiempo real</p>
+    </ion-text>
+
+    <ion-button (click)="login()">
+      <ion-icon name="logo-google" class="google-icon"></ion-icon>
+      LOGIN CON GOOGLE
+    </ion-button>
+    <p class="login-terms">
+      Al continuar, acepta nuestros
+      <!-- <span (click)="openModalTerms()" class="terms-link">Términos y condiciones.</span> -->
+    </p>
+  </div>
+  }
+
+
+</ion-content>

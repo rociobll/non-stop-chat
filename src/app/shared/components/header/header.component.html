@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="header-content">
+      <ion-buttons slot="start" class="header-left">
+        <ion-img class="logo" src="../../../assets/icon/chat-icon2.png" alt="logo de NonStopChat"></ion-img>
+        <ion-title class="app-name">{{appName() | uppercase }}</ion-title>
+      </ion-buttons>
+
+      <!-- si hay ususario logueado -->
+      @if(user$ | async; as user) {
+      <div class="options">
+        <ion-buttons slot="end">
+          <ion-avatar>
+            <ion-img [src]="user.photoURL"></ion-img>
+          </ion-avatar>
+          <ion-label class="user-name">{{ user.displayName}}</ion-label>
+          <ion-button (click)="logOut()">
+            <ion-icon name="log-out" class="log-in-out"></ion-icon>
+            <ion-label>Cerrar sesión</ion-label>
+          </ion-button>
+        </ion-buttons>
+      </div>
+    <!-- cuando no hay ningun usuario autenticado -->
+      } @else {
+      <div class="option-lopin">
+        <ion-buttons slot="end">
+          <ion-button (click)="login()">
+            <ion-icon name="log-in" class="log-in-out"></ion-icon>
+            <ion-label>Iniciar sesión</ion-label>
+          </ion-button>
+        </ion-buttons>
+      </div>
+      }
+
+
+
+    </div>
+  </ion-toolbar>
+</ion-header>
