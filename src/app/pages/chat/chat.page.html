@@ -1,14 +1,10 @@
-
-
 <ion-content class="chat-page-container">
-
-    <ion-toolbar>
-      <ion-title size="large">NonStoprChat Page</ion-title>
-    </ion-toolbar>
-    <ion-button size="small" color="medium" (click)="logOut()"> CERRAR SESIÓN
-      <ion-icon slot="start" name="logo-google" class="google-icon"></ion-icon>
-    </ion-button>
-    <ion-button [routerLink]="['/home-login']" routerLinkActive="router-link-active" >VOLVER A HOME</ion-button>
-
-
+  <ion-toolbar>
+    <ion-title size="large">NonStoprChat Page</ion-title>
+  </ion-toolbar>
+  <ion-button size="small" color="medium" (click)="logOut()"> CERRAR SESIÓN
+    <ion-icon slot="start" name="log-out" class="logout"></ion-icon>
+  </ion-button>
+  <ion-button [routerLink]="['/home-login']" routerLinkActive="router-link-active">VOLVER A HOME</ion-button>
+  <ion-button size="small" color="medium" (click)="testAddMessage()">ENVIAR MENSAJE</ion-button>
 </ion-content>
