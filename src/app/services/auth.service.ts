@@ -19,19 +19,19 @@ export class AuthService {
 
   constructor() {
 
-    this.user$.subscribe((user) => {
-      if (user) {
-        const userData = {
-          displayName: user.displayName,
-          email: user.email,
-          photoURL: user.photoURL,
-          uid: user.uid
-        };
-        localStorage.setItem('currentUser', JSON.stringify(userData));
-      } else {
-        localStorage.removeItem('currentUser');
-      }
-    });
+    // this.user$.subscribe((user) => {
+    //   if (user) {
+    //     const userData = {
+    //       displayName: user.displayName,
+    //       email: user.email,
+    //       photoURL: user.photoURL,
+    //       uid: user.uid
+    //     };
+    //     localStorage.setItem('currentUser', JSON.stringify(userData));
+    //   } else {
+    //     localStorage.removeItem('currentUser');
+    //   }
+    // });
   }
 
 
