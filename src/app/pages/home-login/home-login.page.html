@@ -1,6 +1,4 @@
-
 <ion-content [fullscreen]="true" class="login-content">
-  <!-- <ion-img src="../../../assets/icon/chat-icon2.png" alt="logo de chat 2" class="login-logo"></ion-img> -->
 
   @if(user$ | async; as user) {
   <div class="user-logged-container">
@@ -28,9 +26,7 @@
         chat</ion-button>
 
     </div>
-
   </div>
-
 
   <!-- cuando no hay usuario logueado -->
   } @else {
@@ -47,10 +43,9 @@
     </ion-button>
     <p class="login-terms">
       Al continuar, acepta nuestros
-      <!-- <span (click)="openModalTerms()" class="terms-link">Términos y condiciones.</span> -->
+      <span class="terms-link">Términos y condiciones.</span>
     </p>
   </div>
   }
-
 
 </ion-content>

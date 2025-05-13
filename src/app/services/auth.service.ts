@@ -15,24 +15,8 @@ export class AuthService {
   //se puede usar en componentes con pipe async para saber si hay usuario conectado
   currentUserObs: Observable<User | null> = authState(this.auth);
   readonly user$: Observable<User | null> = this.currentUserObs; //user es observable que emite usuario actual autenticado o null y se actualiza automaticamente por el authState
-  private userData: User | null = null; // esto es para tener copia de datos usaer sin usar observable
 
-  constructor() {
-
-    // this.user$.subscribe((user) => {
-    //   if (user) {
-    //     const userData = {
-    //       displayName: user.displayName,
-    //       email: user.email,
-    //       photoURL: user.photoURL,
-    //       uid: user.uid
-    //     };
-    //     localStorage.setItem('currentUser', JSON.stringify(userData));
-    //   } else {
-    //     localStorage.removeItem('currentUser');
-    //   }
-    // });
-  }
+  constructor() { }
 
 
   loginGoogle() {

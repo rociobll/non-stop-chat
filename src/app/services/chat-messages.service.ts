@@ -1,9 +1,8 @@
-import { inject, Injectable, signal } from '@angular/core';
-import { Database, onValue, push, query, ref } from '@angular/fire/database';
+import { inject, Injectable } from '@angular/core';
+import { Database, onValue, push, query, ref, orderByChild, set } from '@angular/fire/database';
 import { AuthService } from './auth.service';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { Message } from '../interfaces/message.interface';
-import { orderByChild, set } from 'firebase/database';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +11,8 @@ export class ChatMessagesService {
 
   private db: Database = inject(Database);
   private authService = inject(AuthService);
-
-  private messagesArray = new BehaviorSubject<Message[]>([]); //BEhaviorSub permite tener el estado actual de los mensajes
+  //almaceno los mensajes en BehaviorSubject para emitir cambios en tiempo real
+  private messagesArray = new BehaviorSubject<Message[]>([]); //BehaviorSub permite tener el estado actual de los mensajes
  // messagesArray = signal<Message[]>([]); se podría hacer con signal- no necesitaría getMEssages
 
   constructor() { }
@@ -56,7 +55,7 @@ export class ChatMessagesService {
     });
 
     const messagesRef = ref(this.db, 'chatmessages');
-    const newMsgRef = push(messagesRef);
+    const newMsgRef = push(messagesRef); //vuelvo a crear la ref para poner de id, arriba (loadMessages) solo la está leyendo
     const messageId = newMsgRef.key;
 
     const newMsg: Message = {   //se crea nuevo objeto Message

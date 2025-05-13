@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { IonAvatar, IonButton, IonContent, IonIcon, IonImg, IonText } from '@ionic/angular/standalone';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router, RouterLink } from '@angular/router';
+import { first } from 'rxjs';
 
 @Component({
   selector: 'app-home-login',
@@ -17,7 +18,13 @@ export class HomeLoginPage implements OnInit {
 
   user$ = this.auth.user$;
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.auth.user$.pipe(first()).subscribe(user => {  //pipe(first())esperamos el 1º valor del observable si esta logueado va al chat y no se mantiene la suscripción abierta
+      if(user) {
+        this.router.navigate(['/chat']);
+      }
+    });
+   }
 
 
   login() {
