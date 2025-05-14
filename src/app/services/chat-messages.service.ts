@@ -1,8 +1,9 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Database, onValue, push, query, ref, orderByChild, set } from '@angular/fire/database';
 import { AuthService } from './auth.service';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { Message } from '../interfaces/message.interface';
+
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,8 @@ export class ChatMessagesService {
   private db: Database = inject(Database);
   private authService = inject(AuthService);
   //almaceno los mensajes en BehaviorSubject para emitir cambios en tiempo real
-  private messagesArray = new BehaviorSubject<Message[]>([]); //BehaviorSub permite tener el estado actual de los mensajes
- // messagesArray = signal<Message[]>([]); se podría hacer con signal- no necesitaría getMEssages
+  //private messagesArray = new BehaviorSubject<Message[]>([]); //BehaviorSub permite tener el estado actual de los mensajes
+  private  messagesArray = signal<Message[]>([]); // cambio a signals pq me da un erro de ngzone y no quiero usar ngzone
 
   constructor() { }
 
@@ -27,17 +28,18 @@ export class ChatMessagesService {
     onValue(messageQuery, (snapshot) => {    //recorrer todos los hijos del snaphot mensajes, crea array de objetos MEssage, poniendo la id como hey
       const messages: Message[] = [];
       snapshot.forEach(snapChild => {
-        const message = snapChild.val(); //obtener valor del mensaje y añdir nuevo objeto(mensaje) al nodo con su id
-        message.push({ id: snapChild.key ?? '', ...message});
+        const data = snapChild.val(); //obtener valor del mensaje y añdir nuevo objeto(mensaje) al nodo con su id
+        messages.push({ id: snapChild.key ?? '', ...data});
       });
-      this.messagesArray.next(messages);  //emitir los mensajes asi actualizamos array con los nuevos mensajes
-      // this.messagesArray.set(messages);//con signals aqui actualizría la señal de los mensajes
+      //this.messagesArray.next(messages);  //emitir los mensajes asi actualizamos array con los nuevos mensajes
+      this.messagesArray.set(messages);//con signals aqui actualizría la señal de los mensajes
     });
   }
 
   //método para obtener mensajes como observable-devuelve el estado actual de los mensajes, asi cualquier componente se puede suscribir a mensajes
-  getMessages(): Observable<Message[]> {
-    return this.messagesArray.asObservable();
+  getMessages() {
+    // return this.messagesArray.asObservable();
+    return this.messagesArray;
   }
 
 
@@ -49,7 +51,7 @@ export class ChatMessagesService {
     const formattedDate = now.toLocaleDateString('es-ES', {
       day: '2-digit',
       month: '2-digit',
-      year: 'numeric',
+      year: '2-digit',
       hour: '2-digit',
       minute: '2-digit'
     });
@@ -59,10 +61,12 @@ export class ChatMessagesService {
     const messageId = newMsgRef.key;
 
     const newMsg: Message = {   //se crea nuevo objeto Message
-      id: messageId,
+      id: user.uid,
       username: user.displayName || 'desconocido',
       date: formattedDate,
-      message: text
+      message: text,
+      avatar: user.photoURL ?? '',
+
     };
     //mandar mensaje a firebase al nodo chatmessage- el id lo debe generar el push
     // const messagesRef = ref(this.db, 'chatmessages');

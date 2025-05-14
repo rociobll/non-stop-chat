@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  width: 100%;
+  //width: 100%;
   gap: 8px;
 }
 
@@ -11,8 +11,9 @@ ion-toolbar {
   --background: rgb(105, 201, 230);
 
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
+  // padding: 10px;
 }
 
 .header-left {
@@ -28,13 +29,15 @@ ion-toolbar {
 }
 
 ion-icon {
-  margin-right: 6px;
+  margin-right: 25px;
 }
 
 .logo {
+  padding: 5px;
+  margin-left: 25px;
   width: 30vw;
   max-width: 80px;
-  min-width: 15px;
+  min-width: 20px;
   height: auto;
 
 }
@@ -45,19 +48,20 @@ ion-icon {
 
 .app-name {
   color: rgb(16, 14, 18);
-  font-size: clamp(1.1rem,4vw,1.7rem);
+  font-size: clamp(1.1rem, 4vw, 1.7rem);
   font-weight: bold;
-  flex: 1;
-overflow: hidden;
-text-overflow: ellipsis;
+  // flex: 1;
+  // overflow: hidden;
+  text-overflow: ellipsis;
 }
+
 .user-name {
-  font-size: clamp(0.7rem,3vw,0.3rem);
+  font-size: clamp(0.5rem, 2vw, 1rem);
+  margin-right: 25px;
 
 }
 
-.options
-.option-login {
+.options .option-login {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -67,8 +71,9 @@ text-overflow: ellipsis;
 }
 
 ion-avatar {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: auto;
+  padding: 8px;
 }
 
 ion-buttons {
@@ -76,11 +81,9 @@ ion-buttons {
   align-items: center;
 
 }
+
 ion-button {
-  font-size: clamp(0.7rem,3vw,0.3rem);
+  font-size: clamp(0.7rem, 3vw, 0.3rem);
   // font-size: 0.8rem;
   font-weight: 800;
 }
-
-
-

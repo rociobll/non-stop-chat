@@ -4,13 +4,13 @@
   <div class="user-logged-container">
     <div class="left-page">
       <ion-avatar>
-        <ion-img [src]="user.photoURL"></ion-img>
+        <ion-img [src]="user?.photoURL" alt="Avatar de usuario"></ion-img>
       </ion-avatar>
       <ion-text>
         <h6>{{ user.displayName}}</h6>
         <p>{{ user.email }}</p>
       </ion-text>
-      <ion-button expand="full" color="info" (click)="logOut()"> CERRAR SESIÓN
+      <ion-button expand="full" color="dark" (click)="logOut()"> CERRAR SESIÓN
       <ion-icon slot="start" name="logo-google" class="google-icon"></ion-icon>
 
     </ion-button>
@@ -22,7 +22,7 @@
       <ion-text>
         <h3>¿Quieres seguir chateando {{ user.displayName }}?</h3>
       </ion-text>
-      <ion-button expand="full" [routerLink]="['/chat']" routerLinkActive="router-link-active" color="primary">Volver al
+      <ion-button expand="full" [routerLink]="['/chat']" routerLinkActive="router-link-active" color="secondary">Volver al
         chat</ion-button>
 
     </div>

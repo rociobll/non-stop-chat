@@ -19,11 +19,11 @@ export class HomeLoginPage implements OnInit {
   user$ = this.auth.user$;
 
   ngOnInit() {
-    this.auth.user$.pipe(first()).subscribe(user => {  //pipe(first())esperamos el 1º valor del observable si esta logueado va al chat y no se mantiene la suscripción abierta
-      if(user) {
-        this.router.navigate(['/chat']);
-      }
-    });
+    // this.user$.pipe(first()).subscribe(user => {  //pipe(first())esperamos el 1º valor del observable si esta logueado va al chat y no se mantiene la suscripción abierta
+    //   if(user) {
+    //     this.router.navigate(['/chat']);
+    //   }
+    // });
    }
 
 

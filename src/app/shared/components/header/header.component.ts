@@ -14,12 +14,16 @@ export class HeaderComponent  implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.auth.user$.subscribe(user => {
+      console.log('Usuario cargado', user);
+    })
+  }
   private readonly auth = inject(AuthService);
 
 
   appName = signal('NonStopChat');
-  user$ = this.auth.currentUserObs;
+  user$ = this.auth.user$;
 
 
 
@@ -28,6 +32,7 @@ export class HeaderComponent  implements OnInit {
     console.log('Usuario autenticado', (this.user$));
 
   }
+
 
   logOut() {
     this.auth.logOut();

@@ -1,12 +1,11 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonAvatar, IonButton, IonCol, IonContent, IonGrid, IonIcon, IonImg, IonInput, IonRow, IonText, IonTitle } from '@ionic/angular/standalone';
 import { AuthService } from 'src/app/services/auth.service';
 import { RouterLink } from '@angular/router';
 import { ChatMessagesService } from 'src/app/services/chat-messages.service';
-import { Message } from 'src/app/interfaces/message.interface';
-
+import { toSignal } from '@angular/core/rxjs-interop';
 
 
 @Component({
@@ -14,7 +13,7 @@ import { Message } from 'src/app/interfaces/message.interface';
   templateUrl: './chat.page.html',
   styleUrls: ['./chat.page.scss'],
   standalone: true,
-  imports: [ RouterLink, CommonModule, FormsModule, ReactiveFormsModule, IonContent, IonTitle,
+  imports: [ RouterLink, CommonModule, FormsModule, ReactiveFormsModule, IonContent,
      IonText, IonButton, IonInput, IonAvatar, IonIcon, IonImg, IonGrid, IonCol, IonRow]
 })
 export class ChatPage implements OnInit {
@@ -23,12 +22,18 @@ export class ChatPage implements OnInit {
   authService = inject(AuthService);
 
   user$ = this.authService.user$;
-  totalMessages: Message[] = [];
+  messages= this.chatService.getMessages();
+  // totalMessages = toSignal(this.messages$, {initialValue: []}); //converto a signal para no tener que usar pipe async como en user$
+  totalMessages = this.chatService.getMessages;
   messageInput = new FormControl('', [Validators.required]);
 
   constructor() { }
 
   ngOnInit() {
+    this.chatService.loadMessages(); //cargar mensajes de Realtime
+    // this.chatService.getMessages().subscribe(msgs => {
+    //   this.totalMessages = msgs;
+    // });
   }
 
    sendMessage() {

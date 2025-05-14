@@ -13,10 +13,10 @@
           <ion-avatar>
             <ion-img [src]="user.photoURL"></ion-img>
           </ion-avatar>
-          <ion-label class="user-name">{{ user.displayName}}</ion-label>
+          <ion-label class="user-name hide">{{ user.displayName}}</ion-label>
           <ion-button (click)="logOut()">
             <ion-icon name="log-out" class="log-in-out"></ion-icon>
-            <ion-label>Cerrar sesión</ion-label>
+            <ion-label class="hide"></ion-label>
           </ion-button>
         </ion-buttons>
       </div>

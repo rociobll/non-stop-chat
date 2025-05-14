@@ -1,25 +1,3 @@
-<!-- <ion-content class="chat-page-container">
-  <ion-toolbar>
-    <ion-title size="large">NonStoprChat Page</ion-title>
-  </ion-toolbar>
-  <ion-button size="small" color="medium" (click)="logOut()"> CERRAR SESIÓN
-    <ion-icon slot="start" name="log-out" class="logout"></ion-icon>
-  </ion-button>
-  <ion-button [routerLink]="['/home-login']" routerLinkActive="router-link-active">VOLVER A HOME</ion-button>
-  <ion-button size="small" color="medium" (click)="testAddMessage()">ENVIAR MENSAJE</ion-button>
-</ion-content>
-
-
-<ion-content>
-  <ion-input
-
-  id="message" type="text"
-  [formControl]="messageInput"
-  placeholder="Escribe tu mensaje..."
-  (keyup.enter)="sendMessage()">
-  </ion-input>
-  <ion-button (click)="sendMessage()" >Send</ion-button>
-</ion-content> -->
 
 <ion-content class="chat-page-container">
   <!-- <div class="chat-container"> -->
@@ -31,30 +9,35 @@
       <!-- columna izq -->
       <ion-col size="12" size-md="4" class="left-page">
         <ion-avatar>
-          <ion-img [src]="user.photoURL"></ion-img>
+          <img [src]="user.photoURL">
         </ion-avatar>
         <ion-text>
           <h6>{{ user.displayName}}</h6>
           <p>{{ user.email }}</p>
         </ion-text>
-        <ion-button size="small" color="medium" (click)="logOut()"> CERRAR SESIÓN
-          <ion-icon slot="start" name="logo-google" class="google-icon"></ion-icon>
+        <ion-button size="medium" color="medium" (click)="logOut()"> CERRAR SESIÓN
+          <ion-icon slot="start" name="log-out" class="logout-icon"></ion-icon>
+        </ion-button>
+        <ion-button [routerLink]="['/home-login']" size="medium" color="medium"> VOLVER A INICIO
+          <ion-icon slot="start" name="home" class="home-icon"></ion-icon>
         </ion-button>
       </ion-col>
 
       <!-- columna derecha -->
       <ion-col size="12" size-md="8" class="right-page">
         <div class="messages-container">
-          @for(msg of totalMessages; track msg) {
+          @for(msg of messages(); track msg) {
           <div class="message"
             [ngClass]="{'my-message': msg.username === user?.displayName, 'other-message':msg.username !== user?.displayName}">
+            <div class="header">
             <ion-avatar>
-              <ion-img [src]="user.photoURL"></ion-img>
+              <ion-img [src]="msg.avatar" class="avatar"></ion-img>
             </ion-avatar>
+            <ion-text class="username">{{msg.username}}</ion-text>
+            </div>
 
-            <strong>{{msg.username}}</strong>
-            <p>{{ msg.message }}</p>
-            <small>{{ msg.date }}</small>
+            <ion-text>{{ msg.message }}</ion-text>
+            <small class="date">{{ msg.date }}</small>
           </div>
           }
         </div>
@@ -71,7 +54,7 @@
           </ion-input>
 
           <ion-button (click)="sendMessage()" color="primary">ENVIAR
-          <ion-icon slot="end" name="logo-send" class="send-icon"></ion-icon>
+          <ion-icon slot="end" name="send" class="send-icon"></ion-icon>
           </ion-button>
         </form>
 

@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: space-evenly;
   height: 100%;
-  padding: 2rem;
+  padding: 8.5rem;
  gap: 2rem;
  flex-wrap: wrap;
  }
@@ -41,7 +41,8 @@
 
  h6 {
   margin-top: 10%;
-  font-size: 0.8rem;
+  font-size: clamp(0.5rem, 2vw, 1rem);
+  font-weight: bold;
  }
 
  .logo.col {
