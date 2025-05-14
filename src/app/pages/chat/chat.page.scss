@@ -1,14 +1,23 @@
+.chat-page-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
 
-ion-toolbar {
-  // display: flex;
-  // flex-direction: row;
-  // align-items: center;
-  // justify-content: space-between;
-
-  padding: 3rem;
 
 }
 
-ion-button {
-  margin-top: 1.5rem;
+.chat-grid {
+  height: 100%;
+}
+
+.left-page {
+  background-color: rgb(102, 229, 231);
+  padding: 5.5rem;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  border-right: 1px solid grey;
 }

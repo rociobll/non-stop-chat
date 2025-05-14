@@ -32,7 +32,7 @@ export class AuthService {
         const token = credential?.accessToken;
         const user = result.user.providerData[0];
         // const email =  user.providerData[0]?.email;
-        console.log('Usuario logueado:', user); // aqui para ver los que me interesan
+        console.log('Usuario logueado:', user);
 
         return user; //devuelve datos de usuario
 

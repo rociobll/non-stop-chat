@@ -1,4 +1,4 @@
-<ion-content class="chat-page-container">
+<!-- <ion-content class="chat-page-container">
   <ion-toolbar>
     <ion-title size="large">NonStoprChat Page</ion-title>
   </ion-toolbar>
@@ -6,8 +6,8 @@
     <ion-icon slot="start" name="log-out" class="logout"></ion-icon>
   </ion-button>
   <ion-button [routerLink]="['/home-login']" routerLinkActive="router-link-active">VOLVER A HOME</ion-button>
-  <!-- <ion-button size="small" color="medium" (click)="testAddMessage()">ENVIAR MENSAJE</ion-button> -->
-<!-- </ion-content> -->
+  <ion-button size="small" color="medium" (click)="testAddMessage()">ENVIAR MENSAJE</ion-button>
+</ion-content>
 
 
 <ion-content>
@@ -19,4 +19,71 @@
   (keyup.enter)="sendMessage()">
   </ion-input>
   <ion-button (click)="sendMessage()" >Send</ion-button>
+</ion-content> -->
+
+<ion-content class="chat-page-container">
+  <!-- <div class="chat-container"> -->
+  <!-- lado izquierdo -->
+  <!-- <div class="user-side"> -->
+  @if(user$ | async; as user) {
+  <ion-grid class="chat-grid">
+    <ion-row>
+      <!-- columna izq -->
+      <ion-col size="12" size-md="4" class="left-page">
+        <ion-avatar>
+          <ion-img [src]="user.photoURL"></ion-img>
+        </ion-avatar>
+        <ion-text>
+          <h6>{{ user.displayName}}</h6>
+          <p>{{ user.email }}</p>
+        </ion-text>
+        <ion-button size="small" color="medium" (click)="logOut()"> CERRAR SESIÓN
+          <ion-icon slot="start" name="logo-google" class="google-icon"></ion-icon>
+        </ion-button>
+      </ion-col>
+
+      <!-- columna derecha -->
+      <ion-col size="12" size-md="8" class="right-page">
+        <div class="messages-container">
+          @for(msg of totalMessages; track msg) {
+          <div class="message"
+            [ngClass]="{'my-message': msg.username === user?.displayName, 'other-message':msg.username !== user?.displayName}">
+            <ion-avatar>
+              <ion-img [src]="user.photoURL"></ion-img>
+            </ion-avatar>
+
+            <strong>{{msg.username}}</strong>
+            <p>{{ msg.message }}</p>
+            <small>{{ msg.date }}</small>
+          </div>
+          }
+        </div>
+
+
+        <form  class="message-form">
+          <ion-input
+          id="message" type="text"
+          [formControl]="messageInput"
+          (keyup.enter)="sendMessage()"
+          type="text"
+          name="message"
+          placeholder="Escribe tu mensaje...">
+          </ion-input>
+
+          <ion-button (click)="sendMessage()" color="primary">ENVIAR
+          <ion-icon slot="end" name="logo-send" class="send-icon"></ion-icon>
+          </ion-button>
+        </form>
+
+      </ion-col>
+
+    </ion-row>
+    <!-- <ion-item>
+    <ion-input id="name" type="text" [formGroup]="myForm" placeholder=" Escribe tu mensaje..."></ion-input>
+  </ion-item>
+  <ion-button (click)="sendMessage()" [disabled]="!textMessage()">Enviar</ion-button> -->
+  </ion-grid>
+  }
+  <!-- </div> -->
 </ion-content>
+
