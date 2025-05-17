@@ -11,6 +11,7 @@ import { environment } from './environments/environment';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';  //conectar inicar app con firebase
 import { provideAuth, getAuth } from '@angular/fire/auth';  //servicios autenticación
 import { getDatabase, provideDatabase } from '@angular/fire/database'; //bbdd Realtime que es la que uso
+import { provideHttpClient } from '@angular/common/http';
 //import { getFirestore, provideFirestore } from '@angular/fire/firestore'; //bbdd de firestore, si se usase
 
 
@@ -21,7 +22,8 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideAuth(() => getAuth()),
-    provideDatabase(() => getDatabase()), // para bbdd Realtimedatabase la que usaré
+    provideDatabase(() => getDatabase()),
+    provideHttpClient() // para bbdd Realtimedatabase la que usaré
    // provideFirestore(() => getFirestore()), //para bbdd firebase
 
   ],

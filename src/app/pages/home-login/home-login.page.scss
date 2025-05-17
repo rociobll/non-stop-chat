@@ -1,51 +1,88 @@
-
 .user-logged-container {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
   height: 100%;
   padding: 8.5rem;
- gap: 2rem;
- flex-wrap: wrap;
- }
+  gap: 2rem;
+  flex-wrap: wrap;
 
- ion-button {
-  margin-top: 1.5rem;
- }
+  .right-page {
+    .return-button {
+      --background: #4c1165;
+      --border-radius: 15px;
+      --padding-top: 0.8rem;
+      --padding-bottom: 0.8rem;
+      width: 50%;
+      margin: 1rem auto;
 
- .left-page, .right-page {
-  display:flex;
+      &:hover {
+        --background: #704f91;
+      }
+    }
+  }
+}
+
+  .user-logged-container {
+    .left-page {
+      .log-out-button {
+        --background: #291056;
+        --border-radius: 15px;
+        --padding-top: 0.8rem;
+        --padding-bottom: 0.8rem;
+        width: 80%;
+        margin-top: 1rem;
+
+        &:hover {
+          --background: #bd9c4297;
+        }
+      }
+    }
+  }
+
+ion-button {
+  --padding-top: 1rem;
+  --padding-bottom: 1rem;
+  margin: 1rem 0;
+}
+
+
+
+
+.left-page,
+.right-page {
+  display: flex;
   flex-direction: column;
   align-items: center;
   min-width: 250px;
   text-align: center;
- }
+}
 
- .left-page {
+.left-page {
   margin-top: 1rem !important;
- }
+}
 
- .login-logo {
+.login-logo {
   width: 60%;
   height: auto;
- margin-top: 2rem;
+  margin-top: 2rem;
 
 }
 
- ion-avatar {
+ion-avatar {
   width: 100px;
   height: 100px;
   margin-right: 15px;
- }
+}
 
- h6 {
+h6 {
   margin-top: 10%;
   font-size: clamp(0.5rem, 2vw, 1rem);
   font-weight: bold;
- }
+}
 
- .logo.col {
+.logo.col {
   text-align: center;
 }
 
@@ -55,42 +92,71 @@
 }
 
 
-.wellcome h3{
+.wellcome h3 {
   margin-top: 1.5rem;
   font-size: 1.3rem;
 }
 
- .login-content {
+.login-content {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
-    --background:
-      linear-gradient(to bottom, #f7b5f3, rgb(153, 195, 204));
+  --background:
+    linear-gradient(to bottom, #f7b5f3, rgb(153, 195, 204));
 }
 
 .guest-user {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  height: 80%;
+  height: 100%;
   text-align: center;
   padding: 6.5rem;
+
+  .guest-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+    gap: 2px;
+    margin-right: 30px;
+
+    .login-button {
+      --background: #183250;
+      --border-radius: 25px;
+      --padding-top: 1rem;
+      --padding-bottom: 1rem;
+      width: 80%;
+      max-width: 300px;
+      margin: 1rem 0;
+      text-transform: uppercase;
+      font-weight: 500;
+
+      &:hover {
+        --background: #357abd;
+      }
+
+      .google-icon {
+        margin-right: 20px;
+        font-size: 1.2rem;
+      }
+    }
+  }
+
 }
 
 .guest-logo {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  margin-bottom: 20px;
+  width: 70%;
+  height: auto;
+  padding-top: 9rem;
 }
 
 .login-terms {
   font-size: 13px;
-}
-
-.google-icon {
-  margin-right: 15px;
 }
 
 .terms-link {
@@ -103,5 +169,3 @@
 h2 {
   font-weight: 600;
 }
-
-

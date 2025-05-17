@@ -22,14 +22,16 @@
       </div>
     <!-- cuando no hay ningun usuario autenticado -->
       } @else {
-      <div class="option-lopin">
-        <ion-buttons slot="end">
-          <ion-button (click)="login()">
-            <ion-icon name="log-in" class="log-in-out"></ion-icon>
-            <ion-label>Iniciar sesión</ion-label>
-          </ion-button>
-        </ion-buttons>
-      </div>
+        <div class="login-container">
+          <ion-buttons slot="end">
+            <ion-button (click)="login()" class="login-button">
+              <div class="login-content">
+                <ion-icon name="log-in" class="login-icon"></ion-icon>
+                <!-- <span class="login-text">Iniciar sesión</span> -->
+              </div>
+            </ion-button>
+          </ion-buttons>
+        </div>
       }
 
 

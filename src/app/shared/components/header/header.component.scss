@@ -1,3 +1,4 @@
+
 .header-content {
   display: flex;
   justify-content: space-between;
@@ -9,11 +10,10 @@
 
 ion-toolbar {
   --background: rgb(105, 201, 230);
-
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  // padding: 10px;
+  padding: 10px;
 }
 
 .header-left {
@@ -48,7 +48,7 @@ ion-icon {
 
 .app-name {
   color: rgb(16, 14, 18);
-  font-size: clamp(1.1rem, 4vw, 1.7rem);
+  font-size: clamp(1rem, 4vw, 1.7rem);
   font-weight: bold;
   // flex: 1;
   // overflow: hidden;
@@ -61,12 +61,25 @@ ion-icon {
 
 }
 
-.options .option-login {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  white-space: nowrap;
-  flex-shrink: 0;
+.login-container {
+  .login-button {
+    .login-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      margin-right: 20px;
+
+      .login-icon {
+        font-size: 4rem;
+        margin: 0;
+      }
+
+      .login-text {
+        font-size: 0.8rem;
+      }
+    }
+  }
 
 }
 

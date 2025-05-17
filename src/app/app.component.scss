@@ -1,0 +1,25 @@
+:host {
+  display: block;
+  height: 100vh;
+}
+
+.app-header {
+  // position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  pointer-events: none; // Let scroll events pass through
+
+
+  // Make only the header content clickable
+  ::ng-deep ion-toolbar {
+    pointer-events: auto;
+  }
+}
+
+.app-content {
+  padding-top: 56px; // Height of your header
+  height: calc(100vh - 56px);
+  overflow: auto;
+}
