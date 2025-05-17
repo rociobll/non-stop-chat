@@ -38,11 +38,11 @@
        <ion-content #content [scrollEvents]="true" >
       <div class="right-page">
         <div class="messages-container" #msgsContent [scrollTop]="true" >
-          <ion-infinite-scroll #infiniteScroll position="top" (ionInfinite)="loadMoreMessages($event)" threshold="15%">
+          <!-- <ion-infinite-scroll #infiniteScroll position="top" (ionInfinite)="loadMoreMessages($event)" threshold="15%">
             <ion-infinite-scroll-content loadingSpinner="bubbles"
                                        loadingText="Cargando mensajes antiguos...">
             </ion-infinite-scroll-content>
-          </ion-infinite-scroll>
+          </ion-infinite-scroll> -->
 
           @for(msg of messages(); track msg.msgId) {
 
@@ -79,7 +79,11 @@
 
           }
 
-
+          <ion-infinite-scroll #infiniteScroll position="top" (ionInfinite)="loadMoreMessages($event)" threshold="15%">
+            <ion-infinite-scroll-content loadingSpinner="bubbles"
+                                       loadingText="Cargando mensajes antiguos...">
+            </ion-infinite-scroll-content>
+          </ion-infinite-scroll>
         </div>
 
 

@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { HomeLoginPage } from './pages/home-login/home-login.page';
+import { authHomeLoginGuard } from './guards/auth-home-login.guard';
 
 export const routes: Routes = [
   {
@@ -9,7 +9,8 @@ export const routes: Routes = [
 
   {
     path: 'chat',
-    loadComponent: () => import('./pages/chat/chat.page').then( m => m.ChatPage)
+    loadComponent: () => import('./pages/chat/chat.page').then( m => m.ChatPage),
+    canActivate: [authHomeLoginGuard],
   },
 
   {

@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Auth, authState, GoogleAuthProvider, signInWithPopup, signOut, User, UserCredential } from '@angular/fire/auth';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
@@ -14,6 +14,7 @@ export class AuthService {
 
   private userSubject = new BehaviorSubject<User | null>(null);
   readonly user$ = this.userSubject.asObservable();  //  como observabel los componentes solo pueden suscribirse, no emitir valores
+  private userInfo= signal<User | null>(null); // signal para almacenar el usuario actual - lo usaré en el guard
 
   constructor() {
     //authState() es una función de Firebase que devuelve un Observable que emite el usuario actual o null si no hay
@@ -26,6 +27,9 @@ export class AuthService {
         localStorage.removeItem('user');
       }
     });
+  }
+  getUserInfo() {
+    return this.userInfo();
   }
 
   async loginGoogle(): Promise<User> {

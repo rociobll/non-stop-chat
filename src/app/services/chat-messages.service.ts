@@ -1,10 +1,9 @@
-import { inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Database, onValue, push, query, ref, orderByChild, set, limitToLast } from '@angular/fire/database';
 import { AuthService } from './auth.service';
 import { firstValueFrom } from 'rxjs';
 import { Message } from '../interfaces/message.interface';
 import { Geolocation } from '@capacitor/geolocation';
-import { HttpClient } from '@angular/common/http';
 import { GeolocationService } from './geolocation.service';
 
 
@@ -64,14 +63,15 @@ export class ChatMessagesService {
       limitToLast(this.currentLimit())
     );
 
+    this.currentLimit.set(this.currentLimit() + 10 ); // Aumentar el límite para la próxima carga
+
     onValue(messagesQuery, (snapshot) => {
       const allMessages: Message[] = [];
 
       snapshot.forEach(snapChild => {
         const data = snapChild.val();
 
-        allMessages.push({
-          msgId: snapChild.key, ...data
+        allMessages.push({ msgId: snapChild.key, ...data
 
         }); // Agregar el ID único al mensaje
       });

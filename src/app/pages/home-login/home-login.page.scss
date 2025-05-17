@@ -10,7 +10,7 @@
 
   .right-page {
     .return-button {
-      --background: #4c1165;
+      --background: #9f14db;
       --border-radius: 15px;
       --padding-top: 0.8rem;
       --padding-bottom: 0.8rem;
@@ -22,35 +22,7 @@
       }
     }
   }
-}
-
-  .user-logged-container {
-    .left-page {
-      .log-out-button {
-        --background: #291056;
-        --border-radius: 15px;
-        --padding-top: 0.8rem;
-        --padding-bottom: 0.8rem;
-        width: 80%;
-        margin-top: 1rem;
-
-        &:hover {
-          --background: #bd9c4297;
-        }
-      }
-    }
-  }
-
-ion-button {
-  --padding-top: 1rem;
-  --padding-bottom: 1rem;
-  margin: 1rem 0;
-}
-
-
-
-
-.left-page,
+  .left-page,
 .right-page {
   display: flex;
   flex-direction: column;
@@ -96,6 +68,81 @@ h6 {
   margin-top: 1.5rem;
   font-size: 1.3rem;
 }
+
+}
+
+// .user-logged-container {
+//   .left-page {
+//     .log-out-button {
+//       --background: #291056;
+//       --border-radius: 15px;
+//       --padding-top: 0.8rem;
+//       --padding-bottom: 0.8rem;
+//       width: 80%;
+//       margin-top: 1rem;
+
+//       &:hover {
+//         --background: #bd9c4297;
+//       }
+//     }
+//   }
+// }
+
+ion-button {
+  --padding-top: 1rem;
+  --padding-bottom: 1rem;
+  margin: 1rem 0;
+}
+
+
+
+
+// .left-page,
+// .right-page {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   min-width: 250px;
+//   text-align: center;
+// }
+
+// .left-page {
+//   margin-top: 1rem !important;
+// }
+
+// .login-logo {
+//   width: 60%;
+//   height: auto;
+//   margin-top: 2rem;
+
+// }
+
+// ion-avatar {
+//   width: 100px;
+//   height: 100px;
+//   margin-right: 15px;
+// }
+
+// h6 {
+//   margin-top: 10%;
+//   font-size: clamp(0.5rem, 2vw, 1rem);
+//   font-weight: bold;
+// }
+
+// .logo.col {
+//   text-align: center;
+// }
+
+// .login-box {
+//   text-align: center;
+//   margin-top: 2rem;
+// }
+
+
+// .wellcome h3 {
+//   margin-top: 1.5rem;
+//   font-size: 1.3rem;
+// }
 
 .login-content {
   display: flex;

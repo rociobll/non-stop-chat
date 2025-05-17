@@ -24,7 +24,7 @@ export class ChatPage implements OnInit {
   authService = inject(AuthService);
   locationService = inject(GeolocationService);
 
-
+  userInfo = this.authService.getUserInfo();
   user: User | null = null
   // totalMessages = toSignal(this.messages$, {initialValue: []}); //converto a signal para no tener que usar pipe async como en user$
   // totalMessages = this.chatService.getMessages;
@@ -60,7 +60,7 @@ export class ChatPage implements OnInit {
   async ngOnInit() {
 
     try {
-      // 1. Set up user subscription first
+
       this.authService.user$.subscribe(async user => {
         this.user = user;
 
@@ -102,26 +102,21 @@ export class ChatPage implements OnInit {
       console.error('Error al hacer scroll:', err);
     }
   }
-  //   try {
-  //     this.messagesBox.nativeElement.scrollTop = this.messagesBox.nativeElement.scrollHeight;
-  //   } catch(err) {
-  //     console.error('Error al hacer scroll:', err);
-  //   }
-  // }
+
   async loadMoreMessages(event: any) {
     if (!this.infiniteScroll) return;
 
     this.allowAutoScroll = false;
     try {
-      console.log('Loading more messages...');
+      console.log('Cargando mensajes...');
       const hasMore = await this.chatService.loadMoreMessages();
 
       if (!hasMore) {
         this.infiniteScroll.disabled = true;
-        console.log('No more messages to load');
+        console.log('No hay más mensajes.');
       }
     } catch (error) {
-      console.error('Error loading more messages:', error);
+      console.error('Error al cargar mensajes:', error);
     } finally {
       event.target.complete();
     }
@@ -182,7 +177,7 @@ export class ChatPage implements OnInit {
       this.allowAutoScroll = true; // Activar el scroll automático al enviar un mensaje
       await this.chatService.createMessage(text);
       this.messageInput.reset();
-      //el effect se encarga del scroll
+
     }
   }
 
