@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Auth, authState, GoogleAuthProvider, signInWithPopup, signOut, User, UserCredential } from '@angular/fire/auth';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 
 
@@ -21,6 +21,7 @@ export class AuthService {
     //se puede usar en componentes con pipe async para saber si hay usuario conectado
     authState(this.auth).subscribe(user => {   // authState() devuelve observable que emite el usuario actual
       this.userSubject.next(user);   // actualiza BehaviorSubject con  usuario actual
+      this.userInfo.set(user); // actualiza signal con el usuario actual
       if (user) {
         localStorage.setItem('user', JSON.stringify(user));
       } else {

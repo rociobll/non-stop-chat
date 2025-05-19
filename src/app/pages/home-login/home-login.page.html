@@ -1,29 +1,35 @@
 <ion-content [fullscreen]="true" class="login-content">
 
+  <!-- cuando hay usuario logueado se muestra una panatlla distinata de no logueado -->
   @if(user$ | async; as user) {
   <div class="user-logged-container">
     <div class="left-page">
       <ion-avatar>
-        <ion-img [src]="user?.photoURL" alt="Avatar de usuario"></ion-img>
+        <ion-img  [src]="user.photoURL"
+        (ionError)="handleImageError($event)"
+        alt="Avatar de usuario">
+      </ion-img>
       </ion-avatar>
       <ion-text>
         <h6>{{ user.displayName}}</h6>
         <p>{{ user.email }}</p>
       </ion-text>
 
-       <ion-button class="log-out-button" expand="full"(click)="logOut()"> CERRAR SESIÓN
-      <ion-icon slot="start" name="logo-google" class="google-icon"></ion-icon>
-    </ion-button>
+      <ion-button class="log-out-button" expand="full" (click)="logOut()"> CERRAR SESIÓN
+        <ion-icon slot="start" name="log-out" class="out-icon"></ion-icon>
+      </ion-button>
     </div>
 
     <div class="right-page">
       <ion-img src="../../../assets/icon/chat-icon2.png" alt="logo de NonStopChat" class="login-logo"></ion-img>
 
       <ion-text>
-        <h3>¿Quieres seguir chateando {{ user.displayName }}?</h3>
+        <h3>Hola {{ user.displayName }}</h3>
+        <h5> ¿Quieres chatear con tus amigos? </h5>
       </ion-text>
-      <ion-button class="return-button" expand="full" [routerLink]="['/chat']" routerLinkActive="router-link-active">Volver al
-        chat</ion-button>
+      <ion-button class="return-button" expand="full" [routerLink]="['/chat']"
+        routerLinkActive="router-link-active"> ENTRAR AL CHAT
+      </ion-button>
 
     </div>
   </div>
@@ -32,21 +38,21 @@
   } @else {
   <div class="guest-user">
     <div class="guest-content">
-    <ion-img src="../../../assets/icon/chat-icon2.png" alt="logo de chat 2" class="guest-logo"></ion-img>
-    <ion-text>
-      <h2>Bienvenida/o a Non Stop Chat</h2>
-      <p>Disfruta de la experiencia con nuestro chat en tiempo real</p>
-    </ion-text>
+      <ion-img src="../../../assets/icon/chat-icon2.png" alt="logo de chat 2" class="guest-logo"></ion-img>
+      <ion-text>
+        <h2>Bienvenida/o a Non Stop Chat</h2>
+        <p>Disfruta de la experiencia con nuestro chat en tiempo real</p>
+      </ion-text>
 
-    <ion-button (click)="login()" class="login-button">
-      <ion-icon name="logo-google" class="google-icon"></ion-icon>
-      LOGIN CON GOOGLE
-    </ion-button>
-    <p class="login-terms">
-      Al continuar, acepta nuestros
-      <span class="terms-link">Términos y condiciones.</span>
-    </p>
-  </div>
+      <ion-button (click)="login()" class="login-button">
+        <ion-icon name="logo-google" class="google-icon"></ion-icon>
+        LOGIN CON GOOGLE
+      </ion-button>
+      <p class="login-terms">
+        Al continuar, acepta nuestros
+        <span class="terms-link">Términos y condiciones.</span>
+      </p>
+    </div>
   </div>
   }
 

@@ -15,9 +15,9 @@ export class HeaderComponent  implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.auth.user$.subscribe(user => {
+    const user = this.auth.getUserInfo();
       console.log('Usuario cargado', user);
-    })
+
   }
   private readonly auth = inject(AuthService);
 
@@ -39,6 +39,11 @@ export class HeaderComponent  implements OnInit {
       console.log('Usuario deslogueado');
      console.log(this.user$);
 
+    }
+
+    handleImageError(event: any) {
+      const imgElement = event.target;
+      imgElement.src = '../../../assets/icon/cuenta2-avatar.png';
     }
 }
 

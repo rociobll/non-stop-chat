@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { Database, onValue, push, query, ref, orderByChild, set, limitToLast } from '@angular/fire/database';
+import { Database, onValue, push, query, ref, orderByChild, set, limitToLast, get } from '@angular/fire/database';
 import { AuthService } from './auth.service';
 import { firstValueFrom } from 'rxjs';
 import { Message } from '../interfaces/message.interface';
@@ -18,16 +18,14 @@ export class ChatMessagesService {
   private geoService = inject(GeolocationService); // inyecto el servicio de geolocalización
 
   private messagesArray = signal<Message[]>([]); // cambio a signals pq me da un erro de ngzone y no quiero usar ngzone
-  limitPage =10; // Cantidad inicial de mensajes a cargar
-  currentLimit = signal<number>(this.limitPage); // Cantidad actual de mensajes a cargar
+  limitPage = 10; // Cantidad inicial y a incrementar por pág
+  currentLimit = signal<number>(10); // cantidad actual de mensajes a cargar
   totalMessages = signal<number>(0);
   isLoading = signal<boolean>(false);
   private userLocation = signal<string>(''); // Almacenar la ubicación del usuario
 
   constructor() {
     console.log('Iniciando servicio de chat...');
-
-    this.setLocation(); // ubicación al iniciar el servicio
   }
 
   private async setLocation() {
@@ -48,112 +46,109 @@ export class ChatMessagesService {
     }
   }
 
-
   async requestLocationPermission(): Promise<void> {
     await this.setLocation();
   }
 
 
-  loadMessages() {
-    this.isLoading.set(true);
+  //obtener número de mensajes que hay en la base de datos realtime
+  private async getTotalMessages(): Promise<number> {
+    return new Promise((resolve) => {
+      const totalCountRef = query(
+        ref(this.db, 'chatmessages'),
+        orderByChild('timestamp')
+      );
 
-    const messagesQuery = query(
-      ref(this.db, 'chatmessages'),
-      orderByChild('timestamp'),
-      limitToLast(this.currentLimit())
-    );
-
-    this.currentLimit.set(this.currentLimit() + 10 ); // Aumentar el límite para la próxima carga
-
-    onValue(messagesQuery, (snapshot) => {
-      const allMessages: Message[] = [];
-
-      snapshot.forEach(snapChild => {
-        const data = snapChild.val();
-
-        allMessages.push({ msgId: snapChild.key, ...data
-
-        }); // Agregar el ID único al mensaje
-      });
-      // this.messagesArray.set(allMessages.reverse());
-
-      allMessages.sort((a, b) => b.timestamp - a.timestamp); // Ordenar por timestamp
-      this.messagesArray.set(allMessages);  // Actualizar el array de mensajes
-      this.totalMessages.set(allMessages.length); // Actualizar la cantidad total de mensajes
-      this.isLoading.set(false); // Marcar como no cargando después de obtener los mensajes
+      onValue(totalCountRef, (totalSnapshot) => {
+        const totalInDB = totalSnapshot.size;
+        this.totalMessages.set(totalInDB);
+        console.log('Total mensajes en DB:', totalInDB);
+        resolve(totalInDB);
+      }, { onlyOnce: true });
     });
   }
 
+  async loadMessages() {
+    console.log('cargando mensajes con currentlimit:', this.currentLimit());
+    this.isLoading.set(true);
+
+    try {
+      // obtener numero mensajes de bbdd
+      await this.getTotalMessages();
+
+
+      const messagesQuery = query(
+        ref(this.db, 'chatmessages'),
+        orderByChild('timestamp'),
+        limitToLast(this.currentLimit())
+      );
+
+
+      console.log('Query creada esperando datos');
+
+      onValue(messagesQuery, (snapshot) => {
+        const allMessages: Message[] = [];
+        // let count = 0;
+
+        snapshot.forEach(snapChild => {
+          const data = snapChild.val();
+          allMessages.push({ msgId: snapChild.key, ...data }); // Agregar el ID único al mensaje
+        });
+
+
+        allMessages.sort((a, b) => a.timestamp - b.timestamp); // Ordenar por timestamp
+        this.messagesArray.set(allMessages);  // Actualizar el array de mensajes
+
+
+        const hasMore = this.totalMessages() > this.currentLimit();
+        console.log('Mensajes proceso:', {
+          totalCargados: allMessages.length,
+          currentLimit: this.currentLimit(),
+          totalinDb: this.totalMessages(),
+
+          hasMore
+        });
+        this.isLoading.set(false); // Marcar como no cargando después de obtener los mensajes
+
+      });
+    } catch (error) {
+      console.error('Error cargando mensajes:', error);
+      this.isLoading.set(false); // marcar como no cargando en caso de error
+    }
+  }
 
 
   // método para cargar más mensajes
   async loadMoreMessages(): Promise<boolean> {
-    if (this.isLoading())  { // Si ya se está cargando o no hay más q cargar
+    console.log('loadMoreMessages llamado');
+    if (this.isLoading()) { // Si ya se está cargando o no hay más q cargar
+      console.log('Carga en proceso.........');
       return false;
     }
-    // const currentAmount = this.amountOfMessages();
-    // const previousMessages = this.messagesArray();
+
 
     try {
       this.isLoading.set(true); // Marcar como cargando
-      this.currentLimit.set(this.currentLimit() + this.limitPage); // Aumentar la cantidad de mensajes a cargar
+      const oldLimit = this.currentLimit();
+      const newLimit = oldLimit + this.limitPage;
+
+      console.log('Limites:', { old: oldLimit, new: newLimit });
+      this.currentLimit.set(newLimit); // Aumentar la cantidad de mensajes a cargar
       await this.loadMessages(); // Cargar mensajes que ya se habrá subido al array
 
-      return this.totalMessages() > this.currentLimit(); // Verificar si hay más mensajes que cargar
+      // comprobar si hay más mensajes para cargar
+      const hasMore = this.totalMessages() > newLimit;
+      console.log(`¿Hay más mensajes? ${hasMore}`);
+      return hasMore; // Devolver true si hay más mensajes, false si no
 
     } catch (error) {
       console.error('Error al cargar más mensajes', error);
 
-      this.currentLimit.set(this.currentLimit() - this.limitPage); // Revertir el límite si hay un error
       return false;
     } finally {
-      this.isLoading.set(false); // Marcar como no cargando después de intentar cargar más mensajes
+      this.isLoading.set(false); // marcar como no cargando tras intentar cargar más mensajes
     }
   }
-
-// método para verificar si hay más mensajes
-  hasMoreMessages(): boolean {
-    return this.totalMessages() > this.currentLimit();
-
-  }
-
-  getCurrentLimit() {
-    return this.currentLimit;
-  }
-    // try {
-      // const previousMessages = this.messagesArray();
-    //   const currentAmount = this.currentLimit();
-    //   this.amountOfMessages.set(currentAmount + 10);
-    //   await this.loadMessages();
-    //   return this.messagesArray().length > previousMessages.length;
-    //   // try {
-    //   // await this.loadMessages();
-    //   // event.target.complete(); // Completar el evento de carga infinita
-    // } catch (error) {
-    //   console.error('Error loading messages:', error);
-    //   this.amountOfMessages.set(currentAmount);
-    //   return false;
-
-      // event.target.complete(); // Completar el evento de carga infinita incluso si hay un error
-      // return false;
-      // }
-      // } catch (error) {
-      // console.error('Error  more messages:', error);
-      // this.amountOfMessages.set(currentAmount);
-      // return false;
-    // }
-  // }
-
-  //método para obtener mensajes
-  getMessages() {
-    // return this.messagesArray.asObservable();
-    return this.messagesArray;
-  }
-
-  // Método para obtener la cantidad actual de mensajes
-  // getAmountOfMessages() {
-  //   return this.amountOfMessages;
-  // }
 
 
   async createMessage(text: string) {
@@ -193,11 +188,26 @@ export class ChatMessagesService {
       };
       // guardar mensaje en Firebase
       await set(newMsgRef, newMsg);
+      // Actualizar total de mensajes
+      await this.getTotalMessages();
+      // this.currentLimit.set(this.limitPage);
+
+
+      // verificar si hay más mensajes
+      const hasMore = this.totalMessages() > this.currentLimit();
+      console.log('Message enviado, nuevo total:', {
+        total: this.totalMessages(),
+        currentLimit: this.currentLimit(),
+        hasMore
+      });
+
+
       return true;
     } catch (error) {
-      console.log('error enviando mensaje:', error);
+      console.error('Error enviando mensaje:', error);
       return false;
     }
+
   }
 
   // método público para acceder a userLocation ya q está declarada como private
@@ -216,21 +226,8 @@ export class ChatMessagesService {
     }
   }
 
-  // ----
-  // const user = await firstValueFrom(this.authService.user$); // obtiene user actual(solo 1 vez sin suscribirme manualmente)- FirstVAluefrom convierte observable(user$) en promesa para usarlo con await
-  // if(!user || !text) return;
-
-  // const now = new Date();
-
-  // const newMsg: Message = {   //se crea nuevo objeto Message
-  //   id: now.toDateString(),
-  //   username: user.displayName || 'desconocido',
-  //   date: now.toISOString(),
-  //   message: text
-  // };
-  // //mandar mensaje a firebase al nodo chatmessage- el id lo debe generar el push
-  // const messagesRef = ref(this.db, 'chatmessages');
-  // await push(messagesRef, newMsg); //esperar al envío del mensaje antes de vaciar input
-  //}
-
+  //método para obtener mensajes
+  getMessages() {
+    return this.messagesArray;
+  }
 }

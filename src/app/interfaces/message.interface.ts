@@ -7,5 +7,5 @@ export interface Message {
   timestamp: number;
   message: string;
   avatar: string;
-  location: string;
+  location?: string;
 }

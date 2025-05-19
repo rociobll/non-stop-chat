@@ -11,7 +11,11 @@
       <div class="options">
         <ion-buttons slot="end">
           <ion-avatar>
-            <ion-img [src]="user.photoURL"></ion-img>
+            <ion-img
+            [src]="user.photoURL"
+            (ionError)="handleImageError($event)"
+            alt="Avatar de usuario">
+          </ion-img>
           </ion-avatar>
           <ion-label class="user-name hide">{{ user.displayName}}</ion-label>
           <ion-button (click)="logOut()">

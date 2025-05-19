@@ -16,84 +16,62 @@ import { GeolocationService } from 'src/app/services/geolocation.service';
   styleUrls: ['./chat.page.scss'],
   standalone: true,
   imports: [RouterLink, CommonModule, FormsModule, ReactiveFormsModule, IonContent,
-    IonText, IonButton, IonInput, IonAvatar, IonIcon, IonImg, IonCol, IonRow, IonList, IonItem, IonInfiniteScroll, IonInfiniteScrollContent, IonSpinner]
+    IonText, IonButton, IonInput, IonAvatar, IonIcon, IonImg, IonInfiniteScroll, IonInfiniteScrollContent, IonSpinner]
 })
 export class ChatPage implements OnInit {
 
-  private chatService = inject(ChatMessagesService);
+  chatService = inject(ChatMessagesService);
   authService = inject(AuthService);
   locationService = inject(GeolocationService);
 
   userInfo = this.authService.getUserInfo();
   user: User | null = null
-  // totalMessages = toSignal(this.messages$, {initialValue: []}); //converto a signal para no tener que usar pipe async como en user$
-  // totalMessages = this.chatService.getMessages;
   messageInput = new FormControl('', [Validators.required]);
-  isLoading = signal<boolean>(false);
   messages = this.chatService.getMessages();
   userLocation = signal<string>(''); // Almacenar la ubicación del usuario
   allowAutoScroll = true;
-  lastAmountMgs = 0;
+  isLoadingMore = signal<boolean>(false);
+  hasMoreMessages = false; // Variable para controlar si hay más mensajes para cargar
 
-  constructor() {
-
-    effect(() => {
-      const messages = this.messages();
-      if (messages.length > 0 && messages.length !== this.lastAmountMgs) {
-        // Solo hacer scroll si son mensajes nuevos (no cargados del historial)
-        if (messages.length > this.lastAmountMgs) {
-          setTimeout(() => this.scrollToBottom(), 100);
-          this.scrollToBottom();
-        }
-        this.lastAmountMgs = messages.length;
-      }
-    });
-  }
+  constructor() { }
 
 
   @ViewChild(IonContent) content!: IonContent;
-  // @ViewChild('messagesBox') private messagesBox!: ElementRef;
   @ViewChild(IonInfiniteScroll) infiniteScroll!: IonInfiniteScroll;
-
 
 
   async ngOnInit() {
 
-    try {
+      this.user = this.userInfo;
 
-      this.authService.user$.subscribe(async user => {
-        this.user = user;
+      if (this.userInfo) {
+        try {
 
-        if (user) { //
           await this.chatService.requestLocationPermission();
           this.userLocation = this.chatService.getUserLocation();
-          console.log('Ubicación del usuario:', this.userLocation());
 
-          // 3. Load initial messages
-          await this.chatService.loadMessages();
 
-          // 4. Initialize infinite scroll
-          if (this.infiniteScroll) {
-            this.infiniteScroll.disabled = false;
-          }
-
-          // 5. Scroll to bottom after a short delay to ensure DOM is ready
           setTimeout(() => {
             this.scrollToBottom();
-          }, 300);
+          }, 800);
+
+          await this.chatService.loadMessages();
+
+          // Enable infinite scroll if there are more messages
+          if (this.infiniteScroll) {
+            const hasMore = this.chatService.totalMessages() > this.chatService.currentLimit();
+            this.infiniteScroll.disabled = !hasMore;
+            this.hasMoreMessages = hasMore;
+          }
+
+        } catch (error) {
+          console.error('Error al cargar mensajes:', error);
         }
-      });
-
-    } catch (error) {
-      console.error('Error in ngOnInit:', error);
+      }
     }
-  }
 
-  //  ngAfterViewChecked() {
-  //   this.scrollToBottom();
-  //  }
 
-  private scrollToBottom(): void {
+  scrollToBottom(): void {
     if (!this.allowAutoScroll || !this.content) return;
 
     try {
@@ -103,69 +81,14 @@ export class ChatPage implements OnInit {
     }
   }
 
-  async loadMoreMessages(event: any) {
-    if (!this.infiniteScroll) return;
-
-    this.allowAutoScroll = false;
-    try {
-      console.log('Cargando mensajes...');
-      const hasMore = await this.chatService.loadMoreMessages();
-
-      if (!hasMore) {
-        this.infiniteScroll.disabled = true;
-        console.log('No hay más mensajes.');
-      }
-    } catch (error) {
-      console.error('Error al cargar mensajes:', error);
-    } finally {
+  loadMoreMessages(event: any) {
+    this.chatService.loadMoreMessages().then(hasMore => {
       event.target.complete();
-    }
+      if(!hasMore) {
+        event.target.disabled = true;
+      }
+    })
   }
-
-  // async loadMoreMessages(event: any) {
-  //   this.allowAutoScroll = false;
-  //   try {
-  //     console.log('loading more messages');
-  //     const hasMore = await this.chatService.loadMoreMessages();
-  //     if (!hasMore) {
-  //       event.target.disabled = true; // Desactivar el scroll infinito si no hay más mensajes
-  //       console.log('No more messages to load');
-  //     }
-      // }
-      // this.allowAutoScroll = false; // Desactivar el scroll automático al cargar más mensajes
-      // this.isLoading.set(true); // Marcar como cargando
-      // if (!this.chatService.hasMoreMessages()) {
-      //   event.target.disabled = true;
-      //   return;
-      // }
-
-      // try {
-      //   const moreMsgs = await this.chatService.loadMoreMessages();
-      //   if (!moreMsgs) {
-      //     event.target.disabled = true;
-      //   }
-  //   } catch (error) {
-  //     console.error('Error cargando más mensajes:', error);
-  //   } finally {
-  //     event.target.complete();
-  //   }
-  // }
-
-  //   this.allowAutoScroll = false; // Desactivar el scroll automático al cargar más mensajes
-  //   try {
-  //     const success = await this.chatService.loadMoreMessages();
-  //     if (!success) {
-  //       event.target.disabled = true; // Disable infinite scroll if no more messages
-  //       console.log('No more messages to load');
-  //     }
-  //     // event.target.complete();
-  //   } catch (error) {
-  //     console.error('Error loading more messages:', error);
-  //     // event.target.disabled = true;
-  //   } finally {
-  //     event.target.complete();
-  //   }
-  // }
 
 
   async sendMessage() {
@@ -174,13 +97,21 @@ export class ChatPage implements OnInit {
     const text = this.messageInput.value?.trim();    //cogemos el mensaje y quitamos espacios en blanco y si queda texto se envia
     if (text) {
 
-      this.allowAutoScroll = true; // Activar el scroll automático al enviar un mensaje
-      await this.chatService.createMessage(text);
-      this.messageInput.reset();
-
+      try {
+        this.allowAutoScroll = true; // Activar el scroll automático al enviar un mensaje
+        await this.chatService.createMessage(text);
+        this.messageInput.reset();
+        this.chatService.currentLimit.set(10);  //cuando se envia nuevo mensaje, reiniciamos limite a 10 para que cargue los ultomos10 mensajes denuevo
+        this.chatService.loadMessages();
+        setTimeout(() => {
+          this.scrollToBottom();
+        }, 100);
+      } catch (error) {
+        console.error('Error enviando mensaje:', error);
+      }
     }
-  }
 
+  }
 
   deleteAllMessages() {
     const confirmation = confirm('¿Estás seguro de que quieres eliminar todos los mensajes?');

@@ -1,111 +1,120 @@
-<ion-content #content class="chat-page-container" [scrollEvents]="true" scroll-y="true">
+<!-- <div class="chat-page-container"> -->
+<!-- <ion-content  #content class="chat-page-container" [scrollEvents]="true"> -->
 
-  @if(user) {
-    <div class="chat-container">
-      <!-- Columna izquierda -->
-      <div class="left-page">
-        <ion-avatar>
-          <ion-img [src]="user.photoURL || '../../../assets/icon/chat-icon2.png'"
-                   alt="avatar de usuario"
-                   class="avatar">
-          </ion-img>
-        </ion-avatar>
+@if(user) {
+<div class="chat-container">
+  <!-- Columna izquierda -->
+  <div class="left-page">
+    <ion-avatar>
+      <ion-img [src]="user.photoURL || '../../../assets/icon/chat-icon2.png'" alt="avatar de usuario" class="avatar">
+      </ion-img>
+    </ion-avatar>
 
-        <ion-text>
-          <h6>{{ user.displayName }}</h6>
-          <p>{{ user.email }}</p>
-        </ion-text>
+    <ion-text>
+      <h6>{{ user.displayName }}</h6>
+      <p>{{ user.email }}</p>
+    </ion-text>
 
-        <div class="buttons-container">
-          <ion-button [routerLink]="['/home-login']" size="medium" color="medium">
-            <ion-icon slot="start" name="home"></ion-icon>
-            VOLVER A INICIO
-          </ion-button>
+    <div class="buttons-container">
+      <ion-button [routerLink]="['/home-login']" size="medium" color="medium">
+        <ion-icon slot="start" name="home"></ion-icon>
+        VOLVER A INICIO
+      </ion-button>
 
-          <ion-button class="trash" size="medium" color="medium" (click)="deleteAllMessages()">
-            <ion-icon slot="start" name="trash-bin"></ion-icon>
-            VACIAR EL CHAT
-          </ion-button>
+      <ion-button class="trash" size="medium" color="medium" (click)="deleteAllMessages()">
+        <ion-icon slot="start" name="trash-bin"></ion-icon>
+        VACIAR EL CHAT
+      </ion-button>
 
-          <ion-button size="medium" color="medium" (click)="logOut()">
-            <ion-icon slot="start" name="log-out"></ion-icon>
-            CERRAR SESIÓN
-          </ion-button>
-        </div>
-      </div>
-
-      <!-- Columna derecha -->
-       <ion-content #content [scrollEvents]="true" >
-      <div class="right-page">
-        <div class="messages-container" #msgsContent [scrollTop]="true" >
-          <!-- <ion-infinite-scroll #infiniteScroll position="top" (ionInfinite)="loadMoreMessages($event)" threshold="15%">
-            <ion-infinite-scroll-content loadingSpinner="bubbles"
-                                       loadingText="Cargando mensajes antiguos...">
-            </ion-infinite-scroll-content>
-          </ion-infinite-scroll> -->
-
-          @for(msg of messages(); track msg.msgId) {
-
-            <div class="message" [ngClass]="{'my-message': msg.userId === user.uid,
-                                           'other-message': msg.userId !== user.uid}">
-             <div class="header">
-              <ion-avatar>
-                <ion-img [src]="msg.avatar" class="avatar"></ion-img>
-              </ion-avatar>
-              <div class="user-info">
-                <ion-text class="username">{{msg.username}}</ion-text>
-                @if(msg.location) {
-                  <div class="location-info">
-                    <ion-icon name="pin" class="pin"></ion-icon>
-                    <small class="location">{{ userLocation() }}</small>
-                  </div>
-                }
-              </div>
-            </div>
-
-              <ion-text class="message-content">
-                <ion-text>{{ msg.message }}</ion-text>
-              </ion-text>
-
-              <div class="message-data">
-                <small class="date">{{ msg.date }}</small>
-                <small class="time">{{ msg.hour }}</small>
-
-                <ion-icon name="checkmark-done" class="checkmark"></ion-icon>
-              </div>
-
-
-            </div>
-
-          }
-
-          <ion-infinite-scroll #infiniteScroll position="top" (ionInfinite)="loadMoreMessages($event)" threshold="15%">
-            <ion-infinite-scroll-content loadingSpinner="bubbles"
-                                       loadingText="Cargando mensajes antiguos...">
-            </ion-infinite-scroll-content>
-          </ion-infinite-scroll>
-        </div>
-
-
-
-        <div class="form">
-          <form class="message-form">
-            <ion-input id="message"
-                      [formControl]="messageInput"
-                      (keyup.enter)="sendMessage()"
-                      type="text"
-                      name="message"
-                      placeholder="Escribe tu mensaje...">
-            </ion-input>
-
-            <ion-button (click)="sendMessage()" >
-              ENVIAR
-              <ion-icon slot="end" name="send" class="send-icon"></ion-icon>
-            </ion-button>
-          </form>
-        </div>
-      </div>
-       </ion-content>
+      <ion-button size="medium" color="medium" (click)="logOut()">
+        <ion-icon slot="start" name="log-out"></ion-icon>
+        CERRAR SESIÓN
+      </ion-button>
     </div>
-  }
-</ion-content>
+  </div>
+
+  <!-- Columna derecha -->
+  <!-- <ion-content  class="chat-page-container" #content [scrollEvents]="true" > -->
+
+  <!-- <ion-content #content [scrollEvents]="true" (ionScroll)="onScroll($event)">  -->
+  <div class="right-page">
+    <ion-content #content [scrollEvents]="true">
+
+      <div class="messages-container">
+
+        <ion-infinite-scroll #infiniteScroll position="top" (ionInfinite)="loadMoreMessages($event)" threshold="15%">
+
+          <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando mensajes antiguos...">
+          </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+
+        @if(chatService.isLoading() ) {
+        <div class="loading-spinner">
+          <ion-spinner name="crescent" color="medium"></ion-spinner>
+          <p>Cargando mensajes...</p>
+        </div>
+        }
+
+        @for(msg of messages(); track msg.msgId) {
+
+        <div class="message" [ngClass]="{'my-message': msg.userId === user.uid,
+                                           'other-message': msg.userId !== user.uid}">
+          <div class="header">
+            <ion-avatar>
+              <ion-img [src]="msg.avatar" class="avatar"></ion-img>
+            </ion-avatar>
+            <div class="user-info">
+              <ion-text class="username">{{msg.username}}</ion-text>
+              @if(msg.location) {
+              <div class="location-info">
+                <ion-icon name="pin" class="pin"></ion-icon>
+                <small class="location">{{ userLocation() }}</small>
+              </div>
+              }
+            </div>
+          </div>
+
+
+          <ion-text class="message-content">
+            <ion-text>{{ msg.message }}</ion-text>
+          </ion-text>
+
+          <div class="message-data">
+            <small class="date">{{ msg.date }}</small>
+            <small class="time">{{ msg.hour }}</small>
+
+            <ion-icon name="checkmark-done" class="checkmark"></ion-icon>
+          </div>
+        </div>
+
+        }
+
+        @if(messages().length === 0 && !chatService.isLoading()){
+        <div class="no-msgs">
+          <p>No hay ningún mensaje en el chat</p>
+        </div>
+
+        }
+
+
+      </div>
+
+    </ion-content>
+    <div class="form">
+      <form class="message-form">
+        <ion-input id="message" [formControl]="messageInput" (keyup.enter)="sendMessage()" type="text" name="message"
+          placeholder="Escribe tu mensaje...">
+        </ion-input>
+
+        <ion-button (click)="sendMessage()">
+          ENVIAR
+          <ion-icon slot="end" name="send" class="send-icon"></ion-icon>
+        </ion-button>
+      </form>
+    </div>
+  </div>
+  <!-- </ion-content> -->
+</div>
+
+}
+<!-- </ion-content> -->
