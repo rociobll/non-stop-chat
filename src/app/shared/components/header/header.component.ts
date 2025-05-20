@@ -43,7 +43,7 @@ export class HeaderComponent  implements OnInit {
 
     handleImageError(event: any) {
       const imgElement = event.target;
-      imgElement.src = '../../../assets/icon/cuenta2-avatar.png';
+      imgElement.src = '../../../assets/icon/woman2-avatar.png';
     }
 }
 

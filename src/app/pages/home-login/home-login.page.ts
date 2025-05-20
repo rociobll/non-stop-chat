@@ -36,7 +36,7 @@ export class HomeLoginPage implements OnInit {
   // Método para arreglar el error de carga de la imagen de avatar desde Google (a vcees carga y a veces no)
   handleImageError(event: any) {
     const imgElement = event.target;
-    imgElement.src = '../../../assets/icon/cuenta2-avatar.png'; // Cambia la ruta a la imagen de respaldo
+    imgElement.src = '../../../assets/icon/woman2-avatar.png'; // Cambia la ruta a la imagen de respaldo
   }
 
 }

@@ -31,11 +31,11 @@ export class ChatMessagesService {
   private async setLocation() {
     try {
       // Verificar permisos al inicio
-      const permissionStatus = await Geolocation.checkPermissions();
+      // const permissionStatus = await Geolocation.checkPermissions();
 
-      if (permissionStatus.location === 'denied') { // si los permisos denegados solicitarlos
-        await Geolocation.requestPermissions();//
-      }
+      // if (permissionStatus.location === 'denied') { // si los permisos denegados solicitarlos
+      //   await Geolocation.requestPermissions();//
+      // }
 
       const locationName = await this.geoService.getLocationName();
       this.userLocation.set(locationName);
@@ -176,7 +176,7 @@ export class ChatMessagesService {
 
       const newMsg: Message = {
         userId: user.uid,
-        msgId: messageId!,
+        msgId: messageId,
         username: user.displayName || 'desconocido',
         date: formattedDate,
         hour: formattedTime,

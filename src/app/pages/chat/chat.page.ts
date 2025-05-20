@@ -102,10 +102,12 @@ export class ChatPage implements OnInit {
         await this.chatService.createMessage(text);
         this.messageInput.reset();
         this.chatService.currentLimit.set(10);  //cuando se envia nuevo mensaje, reiniciamos limite a 10 para que cargue los ultomos10 mensajes denuevo
-        this.chatService.loadMessages();
+        // this.chatService.loadMessages();
         setTimeout(() => {
           this.scrollToBottom();
         }, 100);
+        this.chatService.loadMessages(); //volver a cargar mensaje con limit 10
+
       } catch (error) {
         console.error('Error enviando mensaje:', error);
       }
@@ -128,5 +130,12 @@ export class ChatPage implements OnInit {
 
     this.authService.logOut();
   }
+
+    // Método para arreglar el error de carga de la imagen de avatar desde Google (a vcees carga y a veces no)
+    handleImageError(event: any) {
+      const imgElement = event.target;
+      imgElement.src = '../../../assets/icon/woman2-avatar.png'; // cambia la ruta a la imagen por defecto si no se carga de google
+    }
+
 
 }

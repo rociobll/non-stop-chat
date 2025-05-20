@@ -6,7 +6,9 @@
   <!-- Columna izquierda -->
   <div class="left-page">
     <ion-avatar>
-      <ion-img [src]="user.photoURL || '../../../assets/icon/chat-icon2.png'" alt="avatar de usuario" class="avatar">
+      <ion-img [src]="user.photoURL"
+      (ionError)="handleImageError($event)"
+      alt="avatar de usuario" class="avatar">
       </ion-img>
     </ion-avatar>
 
@@ -44,7 +46,7 @@
 
         <ion-infinite-scroll #infiniteScroll position="top" (ionInfinite)="loadMoreMessages($event)" threshold="15%">
 
-          <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando mensajes antiguos...">
+          <ion-infinite-scroll-content loadingSpinner="bubbles" dur="2s" loadingText="Cargando mensajes antiguos...">
           </ion-infinite-scroll-content>
         </ion-infinite-scroll>
 
@@ -61,14 +63,14 @@
                                            'other-message': msg.userId !== user.uid}">
           <div class="header">
             <ion-avatar>
-              <ion-img [src]="msg.avatar" class="avatar"></ion-img>
+              <ion-img [src]="msg.avatar" (ionError)="handleImageError($event)" class="avatar"></ion-img>
             </ion-avatar>
             <div class="user-info">
               <ion-text class="username">{{msg.username}}</ion-text>
               @if(msg.location) {
               <div class="location-info">
                 <ion-icon name="pin" class="pin"></ion-icon>
-                <small class="location">{{ userLocation() }}</small>
+                <small class="location">{{ msg.location }}</small>
               </div>
               }
             </div>
@@ -94,6 +96,10 @@
           <p>No hay ningún mensaje en el chat</p>
         </div>
 
+        @if(!chatService.isLoading()) {
+          <p>No hay mensajes anteriores</p>
+        }
+
         }
 
 
@@ -105,8 +111,8 @@
         <ion-input id="message" [formControl]="messageInput" (keyup.enter)="sendMessage()" type="text" name="message"
           placeholder="Escribe tu mensaje...">
         </ion-input>
-
-        <ion-button (click)="sendMessage()">
+        <!-- boton desactivado si no hay texto -->
+        <ion-button (click)="sendMessage()" [disabled]="messageInput.invalid">
           ENVIAR
           <ion-icon slot="end" name="send" class="send-icon"></ion-icon>
         </ion-button>
