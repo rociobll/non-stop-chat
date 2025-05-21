@@ -3,12 +3,16 @@
 
 @if(user) {
 <div class="chat-container">
-  <!-- Columna izquierda -->
+  <!-- Columna izquierda - usuario y opciones -->
   <div class="left-page">
     <ion-avatar>
-      <ion-img [src]="user.photoURL"
-      (ionError)="handleImageError($event)"
-      alt="avatar de usuario" class="avatar">
+      <!-- ionError:evento de ionic para manejar errores al cargar imágenes -->
+      <ion-img
+        [src]="user.photoURL"
+        (ionError)="handleImageError($event)"
+        alt="avatar de usuario"
+        class="avatar"
+      >
       </ion-img>
     </ion-avatar>
 
@@ -23,7 +27,12 @@
         VOLVER A INICIO
       </ion-button>
 
-      <ion-button class="trash" size="medium" color="medium" (click)="deleteAllMessages()">
+      <ion-button
+        class="trash"
+        size="medium"
+        color="medium"
+        (click)="deleteAllMessages()"
+      >
         <ion-icon slot="start" name="trash-bin"></ion-icon>
         VACIAR EL CHAT
       </ion-button>
@@ -35,35 +44,51 @@
     </div>
   </div>
 
-  <!-- Columna derecha -->
+  <!-- Columna derecha - los mensajes -->
   <!-- <ion-content  class="chat-page-container" #content [scrollEvents]="true" > -->
-
   <!-- <ion-content #content [scrollEvents]="true" (ionScroll)="onScroll($event)">  -->
   <div class="right-page">
     <ion-content #content [scrollEvents]="true">
-
+      <!-- mensaje si no hay más mensajes anteriores que cargar -->
       <div class="messages-container">
+        @if(!hasMoreMessages) {
+        <div class="no-more-msgs">
+          <p>No hay mensajes anteriores</p>
+        </div>
+        }
 
-        <ion-infinite-scroll #infiniteScroll position="top" (ionInfinite)="loadMoreMessages($event)" threshold="15%">
-
-          <ion-infinite-scroll-content loadingSpinner="bubbles" dur="2s" loadingText="Cargando mensajes antiguos...">
+        <ion-infinite-scroll
+          #infiniteScroll
+          position="top"
+          (ionInfinite)="loadMoreMessages($event)"
+          threshold="15%"
+        >
+          <ion-infinite-scroll-content
+            loadingSpinner="bubbles"
+            loadingText="Cargando mensajes antiguos..."
+          >
           </ion-infinite-scroll-content>
         </ion-infinite-scroll>
 
         @if(chatService.isLoading() ) {
         <div class="loading-spinner">
-          <ion-spinner name="crescent" color="medium"></ion-spinner>
+          <ion-spinner name="bubbles" color="medium"></ion-spinner>
           <p>Cargando mensajes...</p>
         </div>
-        }
+        } @for(msg of messages(); track msg.msgId) {
 
-        @for(msg of messages(); track msg.msgId) {
-
-        <div class="message" [ngClass]="{'my-message': msg.userId === user.uid,
-                                           'other-message': msg.userId !== user.uid}">
+        <div
+          class="message"
+          [ngClass]="{'my-message': msg.userId === user.uid,
+                                           'other-message': msg.userId !== user.uid}"
+        >
           <div class="header">
             <ion-avatar>
-              <ion-img [src]="msg.avatar" (ionError)="handleImageError($event)" class="avatar"></ion-img>
+              <ion-img
+                [src]="msg.avatar"
+                (ionError)="handleImageError($event)"
+                class="avatar"
+              ></ion-img>
             </ion-avatar>
             <div class="user-info">
               <ion-text class="username">{{msg.username}}</ion-text>
@@ -75,7 +100,6 @@
               }
             </div>
           </div>
-
 
           <ion-text class="message-content">
             <ion-text>{{ msg.message }}</ion-text>
@@ -89,32 +113,31 @@
           </div>
         </div>
 
-        }
-
-        @if(messages().length === 0 && !chatService.isLoading()){
+        } @if(messages().length === 0 && !chatService.isLoading()) {
         <div class="no-msgs">
           <p>No hay ningún mensaje en el chat</p>
         </div>
-
-        @if(!chatService.isLoading()) {
-          <p>No hay mensajes anteriores</p>
         }
-
-        }
-
-
       </div>
-
     </ion-content>
     <div class="form">
       <form class="message-form">
-        <ion-input id="message" [formControl]="messageInput" (keyup.enter)="sendMessage()" type="text" name="message"
-          placeholder="Escribe tu mensaje...">
+        <ion-input
+          id="message"
+          [formControl]="messageInput"
+          (keyup.enter)="sendMessage()"
+          type="text"
+          name="message"
+          placeholder="Escribe tu mensaje..."
+        >
         </ion-input>
         <!-- boton desactivado si no hay texto -->
         <ion-button (click)="sendMessage()" [disabled]="messageInput.invalid">
           ENVIAR
           <ion-icon slot="end" name="send" class="send-icon"></ion-icon>
+        </ion-button>
+        <ion-button (click)="scrollToBottom()">
+          <ion-icon name="chevron-down-circle"></ion-icon>
         </ion-button>
       </form>
     </div>

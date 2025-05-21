@@ -2,44 +2,45 @@
   <ion-toolbar>
     <div class="header-content">
       <ion-buttons slot="start" class="header-left">
-        <ion-img class="logo" src="../../../assets/icon/chat-icon2.png" alt="logo de NonStopChat"></ion-img>
-        <ion-title class="app-name">{{appName() | uppercase }}</ion-title>
+        <ion-img
+          class="logo"
+          src="../../../assets/icon/chat-icon2.png"
+          alt="logo de NonStopChat"
+        ></ion-img>
+        <ion-title class="app-name">{{ appName() | uppercase }}</ion-title>
       </ion-buttons>
 
       <!-- si hay ususario logueado -->
-      @if(user$ | async; as user) {
-      <div class="options">
-        <ion-buttons slot="end">
-          <ion-avatar>
-            <ion-img
-            [src]="user.photoURL"
-            (ionError)="handleImageError($event)"
-            alt="Avatar de usuario">
-          </ion-img>
-          </ion-avatar>
-          <ion-label class="user-name hide">{{ user.displayName}}</ion-label>
-          <ion-button (click)="logOut()">
-            <ion-icon name="log-out" class="log-in-out"></ion-icon>
-            <ion-label class="hide"></ion-label>
-          </ion-button>
-        </ion-buttons>
-      </div>
-    <!-- cuando no hay ningun usuario autenticado -->
+      @if (user$ | async; as user) {
+        <div class="options">
+          <ion-buttons slot="end">
+            <ion-avatar>
+              <ion-img
+                [src]="user.photoURL"
+                (ionError)="handleImageError($event)"
+                alt="Avatar de usuario"
+              >
+              </ion-img>
+            </ion-avatar>
+            <ion-label class="user-name hide">{{ user.displayName }}</ion-label>
+            <ion-button (click)="logOut()">
+              <ion-icon name="log-out" class="log-in-out"></ion-icon>
+              <ion-label class="hide"></ion-label>
+            </ion-button>
+          </ion-buttons>
+        </div>
+        <!-- cuando no hay ningun usuario autenticado -->
       } @else {
         <div class="login-container">
           <ion-buttons slot="end">
             <ion-button (click)="login()" class="login-button">
               <div class="login-content">
                 <ion-icon name="log-in" class="login-icon"></ion-icon>
-                <!-- <span class="login-text">Iniciar sesión</span> -->
               </div>
             </ion-button>
           </ion-buttons>
         </div>
       }
-
-
-
     </div>
   </ion-toolbar>
 </ion-header>

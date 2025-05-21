@@ -12,7 +12,7 @@ export class GeolocationService {
       await Geolocation.checkPermissions();
       const coordinates = await Geolocation.getCurrentPosition({
         enableHighAccuracy: true,
-        timeout: 5000
+        timeout: 4000
       });
 
       // usa nominatim con las coordenadas de Capacitor
