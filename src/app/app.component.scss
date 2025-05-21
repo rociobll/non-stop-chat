@@ -11,7 +11,6 @@
   z-index: 1000;
   pointer-events: none; // Let scroll events pass through
 
-
   // Make only the header content clickable
   ::ng-deep ion-toolbar {
     pointer-events: auto;

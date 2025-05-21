@@ -23,7 +23,6 @@ export class AuthService {
   private userInfo = signal<User | null>(null); // signal para almacenar el usuario actual - lo usaré en el guard
 
   constructor() {
-
     //se puede usar en componentes con pipe async para saber si hay usuario conectado
     authState(this.auth).subscribe((user) => {
       // authState() devuelve observable que emite el usuario actual

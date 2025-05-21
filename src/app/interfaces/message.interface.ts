@@ -3,7 +3,7 @@ export interface Message {
   msgId?: string;
   username: string;
   date: string;
-  hour:string;
+  hour: string;
   timestamp: number;
   message: string;
   avatar: string;
