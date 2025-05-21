@@ -4,6 +4,7 @@ import {
   IonAvatar,
   IonButton,
   IonContent,
+  IonFooter,
   IonIcon,
   IonImg,
   IonText,
@@ -26,6 +27,8 @@ import { RouterLink } from '@angular/router';
     IonAvatar,
     IonImg,
     IonIcon,
+    IonFooter
+
   ],
 })
 export class HomeLoginPage implements OnInit {
