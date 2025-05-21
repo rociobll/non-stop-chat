@@ -8,7 +8,6 @@ import {
   orderByChild,
   set,
   limitToLast,
-  get,
 } from '@angular/fire/database';
 import { AuthService } from './auth.service';
 import { firstValueFrom } from 'rxjs';
