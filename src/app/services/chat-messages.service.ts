@@ -53,7 +53,7 @@ export class ChatMessagesService {
   }
 
   //obtener número de mensajes que hay en la base de datos realtime
-  private async getTotalMessages(): Promise<number> {
+  private async updateTotalMessages(): Promise<number> {
     return new Promise((resolve) => {
       const totalCountRef = query(
         ref(this.db, 'nscmessages'),
@@ -79,7 +79,7 @@ export class ChatMessagesService {
 
     try {
       // obtener numero mensajes de bbdd
-      await this.getTotalMessages();
+      await this.updateTotalMessages();
 
       const messagesQuery = query(
         ref(this.db, 'nscmessages'),
@@ -100,14 +100,6 @@ export class ChatMessagesService {
         allMessages.sort((a, b) => a.timestamp - b.timestamp);
         this.messagesArray.set(allMessages);
 
-        // const hasMore = this.totalMessages() > this.currentLimit();
-        // console.log('Mensajes proceso:', {
-        //   totalCargados: allMessages.length,
-        //   currentLimit: this.currentLimit(),
-        //   totalinDb: this.totalMessages(),
-
-        //   hasMore,
-        // });
         this.isLoading.set(false); // mrcar no cargando después de obtener mensajes
       });
     } catch (error) {
@@ -183,7 +175,7 @@ export class ChatMessagesService {
       // guardar mensaje en Firebase
       await set(newMsgRef, newMsg);
       // Actualizar total de mensajes
-      await this.getTotalMessages();
+      await this.updateTotalMessages();
 
       // verificar si hay más mensajes
       const hasMore = this.totalMessages() > this.currentLimit();

@@ -38,6 +38,7 @@ ion-icon {
   max-width: 65px;
   min-width: 20px;
   height: auto;
+  cursor: pointer;
 }
 
 .log-in-out {
@@ -53,6 +54,10 @@ ion-icon {
 .user-name {
   font-size: clamp(0.4rem, 1vw, 0.9rem);
   margin-right: 25px;
+
+  @media (max-width: 500px) {
+    display: none; // ocultar nombre user en pantallas pequeñas
+  }
 }
 
 .login-container {

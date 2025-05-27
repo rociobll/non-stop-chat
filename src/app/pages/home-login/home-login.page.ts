@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import {
   IonAvatar,
@@ -8,11 +8,11 @@ import {
   IonIcon,
   IonImg,
   IonText,
-  IonToolbar,
+  IonCard,
 } from '@ionic/angular/standalone';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router, RouterLink } from '@angular/router';
-import { Subscription, take } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home-login',
@@ -30,10 +30,9 @@ import { Subscription, take } from 'rxjs';
     IonImg,
     IonIcon,
     IonFooter,
-    IonToolbar,
   ],
 })
-export class HomeLoginPage implements OnInit {
+export class HomeLoginPage implements OnInit, OnDestroy {
   private readonly auth = inject(AuthService);
   private router = inject(Router);
 
@@ -49,10 +48,6 @@ export class HomeLoginPage implements OnInit {
     });
   }
 
-  ngOnDestroy() {
-    this.userSub?.unsubscribe();
-  }
-
   login() {
     this.auth.loginGoogle();
   }
@@ -64,9 +59,13 @@ export class HomeLoginPage implements OnInit {
     this.auth.logOut();
   }
 
-  // Método para arreglar el error de carga de la imagen de avatar
+  ngOnDestroy() {
+    this.userSub?.unsubscribe();
+  }
+
+  // Método para arreglar error carga de imagen de avatar
   handleImageError(event: any) {
     const imgElement = event.target;
-    imgElement.src = '../../../assets/icon/woman2-avatar.png'; // cambia la ruta a la imagen por defecto
+    imgElement.src = '../../../assets/icon/woman2-avatar.png';
   }
 }

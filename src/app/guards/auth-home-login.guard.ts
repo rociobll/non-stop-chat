@@ -11,12 +11,12 @@ export const authHomeLoginGuard: CanActivateFn = (route, state) => {
     take(1),
     map((user) => {
       if (!user) {
-        alert('Tiene que estar logueado para acceder al chat.')
-        router.navigate(['/home-login']); // redirige a login si no hay usuario autenticado
-        return false; // no permite acceso a ruta /chat
+        router.navigate(['/home-login']);
+
+        return false; // no permite acceso a /chat
       }
 
-      return true; //si hay user autenticado permite acceso a chat
+      return true;
     }),
   );
 };

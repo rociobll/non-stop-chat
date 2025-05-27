@@ -38,7 +38,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     const user = this.auth.getUserInfo();
-    console.log('Usuario cargado', user);
+
   }
   private readonly auth = inject(AuthService);
 

@@ -7,14 +7,14 @@ import { Geolocation } from '@capacitor/geolocation';
 export class GeolocationService {
   async getLocationName(): Promise<string> {
     try {
-      // solicitar permisos de Capacitor
+      // solicitar permisos de capacitor
       await Geolocation.checkPermissions();
       const coordinates = await Geolocation.getCurrentPosition({
         enableHighAccuracy: true,
         timeout: 4000,
       });
 
-      // usa nominatim con las coordenadas de Capacitor
+      // usa nominatim con las coordenadas de capacitor
       const response = await fetch(
         `https://nominatim.openstreetmap.org/reverse?lat=${coordinates.coords.latitude}&lon=${coordinates.coords.longitude}&format=json`,
       );
