@@ -2,11 +2,16 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
-  height: 95%;
-  padding: 8.5rem;
-  gap: 2rem;
-  flex-wrap: wrap;
+  justify-content: space-around;
+  height: 100%;
+  padding-top: 8rem;
+  // gap: 1rem;
+  flex-wrap: nowrap;
+
+  @media (max-width: 768px) {
+    flex-direction: column; // pantallas pequeñas en columna
+    position: relative;
+  }
 
   .right-page {
     .return-button {
@@ -15,7 +20,7 @@
       --padding-top: 0.8rem;
       --padding-bottom: 0.8rem;
       width: 50%;
-      margin: 1rem auto;
+      // margin: 1rem auto;
 
       &::part(native) {
         border-radius: 15px;
@@ -29,6 +34,7 @@
 
   .left-page,
   .right-page {
+    width: 50%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -44,9 +50,12 @@
       --border-radius: 15px;
       --padding-top: 0.8rem;
       --padding-bottom: 0.8rem;
-
-      width: 80%;
+      width: 40%;
       margin-top: 1rem;
+
+      @media (max-width: 768px) {
+        display: none; // ocultar parte izquierda datos usaurio y opciones en pantallas pequeñas
+      }
 
       &::part(native) {
         border-radius: 15px;
@@ -140,11 +149,13 @@ ion-footer {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 95%;
+  height: 100%;
   text-align: center;
-  padding: 3rem;
+
+  padding: 1rem;
 
   .guest-content {
+    padding-top: 4rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -152,7 +163,7 @@ ion-footer {
     text-align: center;
     height: 100%;
     gap: 2px;
-    margin-right: 30px;
+    // margin-right: 30px;
 
     .login-button {
       --background: #183250;
@@ -178,9 +189,9 @@ ion-footer {
 }
 
 .guest-logo {
-  width: 70%;
-  height: auto;
-  padding-top: 9rem;
+  width: 60%;
+  height: 95%;
+  padding-top: 6rem;
 }
 
 .login-terms {
@@ -195,4 +206,10 @@ ion-footer {
 
 h2 {
   font-weight: 600;
+}
+
+ion-footer{
+  padding-top: 5px;
+  position:relative;
+
 }

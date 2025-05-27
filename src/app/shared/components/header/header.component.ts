@@ -1,5 +1,6 @@
 import { AsyncPipe, UpperCasePipe } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import {
   IonAvatar,
   IonButton,
@@ -18,6 +19,7 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   imports: [
+    RouterLink,
     IonIcon,
     IonLabel,
     IonImg,

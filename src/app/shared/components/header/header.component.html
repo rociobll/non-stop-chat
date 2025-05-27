@@ -1,11 +1,12 @@
 <ion-header>
   <ion-toolbar>
     <div class="header-content">
-      <ion-buttons slot="start" class="header-left">
+      <ion-buttons slot="start" class="header-left" [routerLink]="['/home-login']">
         <ion-img
           class="logo"
           src="../../../assets/icon/chat-icon2.png"
           alt="logo de NonStopChat"
+
         ></ion-img>
         <ion-title class="app-name">{{ appName() | uppercase }}</ion-title>
       </ion-buttons>

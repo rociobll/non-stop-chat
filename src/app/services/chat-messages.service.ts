@@ -56,7 +56,7 @@ export class ChatMessagesService {
   private async getTotalMessages(): Promise<number> {
     return new Promise((resolve) => {
       const totalCountRef = query(
-        ref(this.db, 'chatmessages'),
+        ref(this.db, 'nscmessages'),
         orderByChild('timestamp'),
       );
 
@@ -82,7 +82,7 @@ export class ChatMessagesService {
       await this.getTotalMessages();
 
       const messagesQuery = query(
-        ref(this.db, 'chatmessages'),
+        ref(this.db, 'nscmessages'),
         orderByChild('timestamp'),
         limitToLast(this.currentLimit()),
       );
@@ -91,7 +91,6 @@ export class ChatMessagesService {
 
       onValue(messagesQuery, (snapshot) => {
         const allMessages: Message[] = [];
-        // let count = 0;
 
         snapshot.forEach((snapChild) => {
           const data = snapChild.val();
@@ -101,14 +100,14 @@ export class ChatMessagesService {
         allMessages.sort((a, b) => a.timestamp - b.timestamp);
         this.messagesArray.set(allMessages);
 
-        const hasMore = this.totalMessages() > this.currentLimit();
-        console.log('Mensajes proceso:', {
-          totalCargados: allMessages.length,
-          currentLimit: this.currentLimit(),
-          totalinDb: this.totalMessages(),
+        // const hasMore = this.totalMessages() > this.currentLimit();
+        // console.log('Mensajes proceso:', {
+        //   totalCargados: allMessages.length,
+        //   currentLimit: this.currentLimit(),
+        //   totalinDb: this.totalMessages(),
 
-          hasMore,
-        });
+        //   hasMore,
+        // });
         this.isLoading.set(false); // mrcar no cargando después de obtener mensajes
       });
     } catch (error) {
@@ -131,6 +130,10 @@ export class ChatMessagesService {
 
       console.log('Limites:', { old: oldLimit, new: newLimit });
       this.currentLimit.set(newLimit);
+
+      // Esperar 1,50s antes de cargar los mensajes asi spinner se muestra más tiempo
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
       await this.loadMessages();
 
       // comprobar si hay más mensajes para cargar
@@ -141,8 +144,6 @@ export class ChatMessagesService {
       console.error('Error al cargar más mensajes', error);
 
       return false;
-    } finally {
-      this.isLoading.set(false); // marcar como no cargando tras intentar cargar más mensajes
     }
   }
 
@@ -164,7 +165,7 @@ export class ChatMessagesService {
         minute: '2-digit',
       });
       //mandar mensaje a firebase al nodo chatmessage- el id lo debe generar el push
-      const messagesRef = ref(this.db, 'chatmessages');
+      const messagesRef = ref(this.db, 'nscmessages');
       const newMsgRef = push(messagesRef); // crear la ref para poner de id de mensaje
       const messageId = newMsgRef.key; // Crear un ID único para el mensaje
 
@@ -206,7 +207,7 @@ export class ChatMessagesService {
 
   async deleteAllMessages(): Promise<void> {
     try {
-      const messagesRef = ref(this.db, 'chatmessages/'); // ref a ubicación de los mensajes en Firebase
+      const messagesRef = ref(this.db, 'nscmessages/'); // ref a ubicación de los mensajes en Firebase
       await set(messagesRef, null); // eliminar todos mens
       this.messagesArray.set([]); //vaciar array de mensajes del servicio
     } catch (error) {

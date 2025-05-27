@@ -76,22 +76,24 @@
 }
 
 .right-page {
+
   flex: 1;
   display: flex;
   flex-direction: column;
   height: 100%;
   background-color: #f5f5f5;
-  padding-top: 4rem;
+  // padding-top: 4rem;
   overflow: hidden; // controlar el scroll
   position: relative;
 
   .messages-container {
+    margin-top:105px;
     flex: 1;
     display: flex;
     flex-direction: column;
     // flex-direction: column-reverse; //para q se vean ,mnsajes mas nuevos abajo y así ir al final del cont
     gap: 1rem;
-    padding-top: 7rem;
+    padding-top: 2rem;
     padding-left: 1rem;
     padding-right: 1rem;
     padding-bottom: 1rem;
@@ -99,45 +101,47 @@
     position: relative;
     background-color: #ffffff;
 
-    no-more-msgs {
+    .no-more-msgs {
       color: black;
+      justify-content: center;
       text-align: center;
       padding: 10px;
-      background-color: #78c2f3;
-      border-bottom: 1px solid #e8c5f8;
+      background-color: #f4f1f1;
     }
 
     ion-infinite-scroll {
-      position: relative;
-      order: 2;
-      top: 0px;
+      // position: relative;
+      // order: 2;
+      // top: 0px;
       width: 100%;
-      z-index: 1;
-      margin-top: 2rem;
-      // background: blue;
+      // // z-index: 1;
+      // // margin-top: 2rem;
+      background: rgb(255, 255, 255);
+      color: rgb(49, 18, 204);
     }
 
-    .loading-spinner {
-      margin-top: 25px;
-      position: relative;
-      z-index: 1000;
-      font-size: 25px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 0rem;
+    // .loading-spinner {
+    //   margin-top: 25px;
+    //   position: relative;
+    //   // z-index: 1000;
+    //   font-size: 25px;
+    //   display: flex;
+    //   flex-direction: column;
+    //   align-items: center;
+    //   justify-content: center;
+    //   padding: 0rem;
 
-      ion-spinner {
-        margin-bottom: 0.5rem;
-        margin-top: 100px;
-      }
+      // ion-spinner {
+      //   margin-bottom: 0.5rem;
+      //   margin-top: 100px;
+      // }
 
       p {
-        color: var(--ion-color-medium);
+        color: var(--ion-color-primary);
+        font-size: 0.8rem;
         margin: 0;
       }
-    }
+
 
     // datos del mensaje que envío
     .message {
@@ -191,7 +195,7 @@
         // width: 90%;
 
         .avatar {
-          width: 80%;
+          width: 60%;
           height: auto;
           align-items: center;
         }
@@ -242,6 +246,10 @@
       display: flex;
       gap: 1rem;
 
+      .msg-empty {
+        color: red;
+      }
+
       ion-input {
         flex: 1;
         background-color: #ffffff;
@@ -251,6 +259,7 @@
         --padding-top: 0.5rem;
         --padding-bottom: 0.5rem;
       }
+
 
       ion-button {
         --background: #be2ddb;

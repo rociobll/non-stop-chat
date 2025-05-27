@@ -21,11 +21,12 @@ export class GeolocationService {
 
 
       const { address } = await response.json();
-      const { city, town, village, country } = address;
+      const { city, town, village, country, province } = address;
       const _city = city || town || village || '';
       const _country = country || '';
+      const _province = province || '';
 
-      return city ? `${_city}, ${_country}` : 'Ubicación no disponible';
+      return _city ? `${_city}, ${_province}, ${_country}` : 'Ubicación no disponible';
 
 
     } catch (error) {

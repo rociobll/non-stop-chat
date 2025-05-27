@@ -34,9 +34,9 @@ bootstrapApplication(AppComponent, {
     // provideFirestore(() => getFirestore()), //para bbdd firebase
 
     //Hash strategy - para que al recargar en netlify no de page not found
-    {
-      provide: LocationStrategy,
-      useClass: HashLocationStrategy,
-    },
+    // {
+    //   provide: LocationStrategy,
+    //   useClass: HashLocationStrategy,
+    // },
   ],
 }).catch((error) => console.log(error));

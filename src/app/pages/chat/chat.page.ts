@@ -8,8 +8,10 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  InfiniteScrollCustomEvent,
   IonAvatar,
   IonButton,
+  IonCard,
   IonContent,
   IonIcon,
   IonImg,
@@ -34,6 +36,7 @@ import { GeolocationService } from 'src/app/services/geolocation.service';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    IonCard,
     IonContent,
     IonText,
     IonButton,
@@ -70,16 +73,17 @@ export class ChatPage implements OnInit {
 
     if (this.userInfo) {
       try {
-        await this.chatService.requestLocationPermission();
-        this.userLocation = this.chatService.getUserLocation();
+        await this.chatService.loadMessages();
 
         setTimeout(() => {
           this.scrollToBottom();
-        }, 800);
+        }, 100);
 
-        await this.chatService.loadMessages();
+        await this.chatService.requestLocationPermission();
+        this.userLocation = this.chatService.getUserLocation();
 
-        // Activar infinite-scroll
+
+        //Activar infinite-scroll
         if (this.infiniteScroll) {
           const hasMore =
             this.chatService.totalMessages() > this.chatService.currentLimit();
@@ -97,25 +101,37 @@ export class ChatPage implements OnInit {
     if (!this.allowAutoScroll || !this.content) return;
 
     try {
-      this.content.scrollToBottom(300);
+      this.content.scrollToBottom(100);
     } catch (err) {
       console.error('Error al hacer scroll:', err);
     }
   }
 
   //método para cargar más mensajes - completar el evento de infinite scroll y deshabilitarlo si no hay más mensajes.
-  loadMoreMessages(event: any) {
-    this.chatService.loadMoreMessages().then((hasMore) => {
-      this.hasMoreMessages = hasMore;
+  loadMoreMessages(event: InfiniteScrollCustomEvent) {
+    this.content.getScrollElement().then((el) => {
+      const previousHeight = el.scrollHeight;
 
-      setTimeout(() => {
-        //delay para que scroll no se me dispare varias vece seguidas y aumente limites demasiado rápido
-        const target = event?.target as HTMLIonInfiniteScrollElement;
-        target?.complete();
-        if (!hasMore) {
-          target.disabled = true;
-        }
-      }, 500);
+      this.chatService.loadMoreMessages().then((hasMore) => {
+        //then espera q la promesa loadMore se resuelva, evalua hasMore(si es true o false) par saber si mantener scroll-inf o no
+        this.hasMoreMessages = hasMore;
+        this.isLoadingMore.set(false); // Marcar como no cargando después de intentar cargar más mensajes
+
+        setTimeout(() => {
+
+          event.target.complete(); //informa a componente q la carga se ha completado
+          if (!hasMore) {
+            this.infiniteScroll.disabled = true;
+          }
+          // Ajustar scroll para mantener la posición relativa
+          this.content.getScrollElement().then((newEl) => {
+            const newHeight = newEl.scrollHeight;
+            const heightDiff = newHeight - previousHeight;    //scroll hacia abajo lo que creció el contenido
+
+            this.content.scrollByPoint(0, heightDiff, 0);
+          });
+        }, 100); // lo que tarda en ir a la posición scrollbypoint
+      });
     });
   }
 
@@ -136,9 +152,8 @@ export class ChatPage implements OnInit {
 
         this.hasMoreMessages = true; // Reactivar el scroll infinito, si no al limitar a 10 y load no hace scroll y carga pq tenia desactivado el scroll event al final de mensajes
 
-        const infiniteScroll = document.querySelector('ion-infinite-scroll');
-        if (infiniteScroll) {
-          (infiniteScroll as HTMLIonInfiniteScrollElement).disabled = false;
+         if (this.infiniteScroll) {
+          this.infiniteScroll.disabled = false;  //se habilita elscroll visualmente
         }
       } catch (error) {
         console.error('Error enviando mensaje:', error);

@@ -8,9 +8,11 @@ import {
   IonIcon,
   IonImg,
   IonText,
+  IonToolbar,
 } from '@ionic/angular/standalone';
 import { AuthService } from 'src/app/services/auth.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { Subscription, take } from 'rxjs';
 
 @Component({
   selector: 'app-home-login',
@@ -28,14 +30,28 @@ import { RouterLink } from '@angular/router';
     IonImg,
     IonIcon,
     IonFooter,
+    IonToolbar,
   ],
 })
 export class HomeLoginPage implements OnInit {
   private readonly auth = inject(AuthService);
+  private router = inject(Router);
 
   user$ = this.auth.user$;
 
-  ngOnInit() {}
+  private userSub!: Subscription;
+
+  ngOnInit() {
+    this.userSub = this.user$.subscribe((user) => {
+      if (user) {
+        this.router.navigate(['/chat']);
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.userSub?.unsubscribe();
+  }
 
   login() {
     this.auth.loginGoogle();

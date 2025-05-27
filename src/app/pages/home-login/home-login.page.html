@@ -1,4 +1,4 @@
-<ion-content [fullscreen]="true" class="login-content">
+<ion-content  class="login-content">
   <!-- cuando hay usuario logueado se muestra una panatlla distinata de no logueado -->
   @if(user$ | async; as user) {
   <div class="user-logged-container">
@@ -70,12 +70,17 @@
   </div>
   }
 
-  <ion-footer>
-    <ion-text>
-      &copy; 2025 - NonStopChat - Rocío Bahamonde Llorente - Contacto:
-      <a href="mailto:contacto&#64;nonstopchat.com"
-        >contacto&#64;nonstopchat.com</a
-      >
-    </ion-text>
-  </ion-footer>
-</ion-content>
+ </ion-content>
+
+
+<ion-footer>
+  <!-- <ion-toolbar> -->
+  <ion-text>
+    &copy; 2025 - NonStopChat - Rocío Bahamonde Llorente - Contacto:
+    <a href="mailto:contacto&#64;nonstopchat.com"
+      >contacto&#64;nonstopchat.com</a
+    >
+  </ion-text>
+<!-- </ion-toolbar> -->
+</ion-footer>
+
