@@ -1,12 +1,12 @@
-import { User } from '@angular/fire/auth';
-import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import {
   FormControl,
   FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import {
   InfiniteScrollCustomEvent,
   IonAvatar,
@@ -21,7 +21,6 @@ import {
   IonText,
 } from '@ionic/angular/standalone';
 import { AuthService } from 'src/app/services/auth.service';
-import { RouterLink } from '@angular/router';
 import { ChatMessagesService } from 'src/app/services/chat-messages.service';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 
@@ -48,46 +47,47 @@ import { GeolocationService } from 'src/app/services/geolocation.service';
   ],
 })
 export class ChatPage implements OnInit {
-  chatService = inject(ChatMessagesService);
-  authService = inject(AuthService);
-  locationService = inject(GeolocationService);
-
-  userInfo = this.authService.getUserInfo();
-  // user: User | null = null;
-  messageInput = new FormControl('', [Validators.required]);
-  messages = this.chatService.getMessages();
-  userLocation = signal<string>('');
-  allowAutoScroll = true;
-  hasMoreMessages = false;
-  isLoadingMore = signal<boolean>(false);
-  isLoading = this.chatService.isLoading(); //señal desde el servicio
+  private readonly chatService = inject(ChatMessagesService);
+  private readonly authService = inject(AuthService);
 
   @ViewChild(IonContent) content!: IonContent;
   @ViewChild(IonInfiniteScroll) infiniteScroll!: IonInfiniteScroll;
 
+  userInfo = this.authService.userInfo;
+  messages = this.chatService.messagesArray;
+  userLocation = this.chatService.userLocation;
+  isLoading = this.chatService.isLoading;
+
+  // user: User | null = null;
+
+  messageInput = new FormControl('', [Validators.required]);
+
+  allowAutoScroll = true;
+  hasMoreMessages = false;
+
+  isLoadingMore = signal<boolean>(false);
+
   async ngOnInit() {
     // this.user = this.userInfo;
+    if (!this.userInfo()) return;
 
-    if (this.userInfo) {
-      try {
-        await this.chatService.loadMessages();
+    try {
+      await this.chatService.loadMessages();
 
-        setTimeout(() => {
-          this.scrollToBottom();
-        }, 100);
+      setTimeout(() => {
+        this.scrollToBottom();
+      }, 100);
 
-        await this.chatService.requestLocationPermission();
-        this.userLocation = this.chatService.getUserLocation();
+      await this.chatService.requestLocationPermission();
 
-        if (this.infiniteScroll) {
-          const hasMore =
-            this.chatService.totalMessages() > this.chatService.currentLimit();
-          this.infiniteScroll.disabled = !hasMore;
-          this.hasMoreMessages = hasMore;
-        }
-      } catch (error) {
-        console.error('Error al cargar mensajes:', error);
-      }
+      if (!this.infiniteScroll) return;
+
+      const hasMore =
+        this.chatService.totalMessages() > this.chatService.currentLimit();
+      this.infiniteScroll.disabled = !hasMore;
+      this.hasMoreMessages = hasMore;
+    } catch (error) {
+      console.error('Error al cargar mensajes:', error);
     }
   }
 
@@ -103,7 +103,7 @@ export class ChatPage implements OnInit {
 
   //método para cargar más mensajes - completar el evento de infinite scroll y deshabilitarlo si no hay más mensajes.
   loadMoreMessages(event: InfiniteScrollCustomEvent) {
-    if (this.isLoading) {
+    if (this.isLoading()) {
       event.target.complete();
       return;
     }
@@ -125,6 +125,7 @@ export class ChatPage implements OnInit {
             event.target.complete();
             return;
           }
+
           // ajusto scroll para mantener posición relativa
           this.content.getScrollElement().then((newEl) => {
             const newHeight = newEl.scrollHeight;

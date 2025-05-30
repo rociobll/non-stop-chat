@@ -19,34 +19,19 @@ import { GeolocationService } from './geolocation.service';
   providedIn: 'root',
 })
 export class ChatMessagesService {
-  private db: Database = inject(Database);
-  private authService = inject(AuthService);
-  private geoService = inject(GeolocationService);
+  private readonly db: Database = inject(Database);
+  private readonly authService = inject(AuthService);
+  private readonly geoService = inject(GeolocationService);
 
-  private messagesArray = signal<Message[]>([]);
+  messagesArray = signal<Message[]>([]);
+  userLocation = signal<string>('');
+
   limitPage = 10;
   currentLimit = signal<number>(10);
   totalMessages = signal<number>(0);
   isLoading = signal<boolean>(false);
-  private userLocation = signal<string>('');
 
   constructor() {}
-
-  private async setLocation() {
-    try {
-      const permissionStatus = await Geolocation.checkPermissions();
-      if (permissionStatus.location === 'denied') {
-        await Geolocation.requestPermissions(); //
-      }
-
-      const locationName = await this.geoService.getLocationName();
-      this.userLocation.set(locationName);
-      console.log('Ubicación inicial:', locationName);
-    } catch (error) {
-      console.error('Error obteniendo ubicación:', error);
-      this.userLocation.set('Ubicación no disponible');
-    }
-  }
 
   async requestLocationPermission(): Promise<void> {
     await this.setLocation();
@@ -129,19 +114,16 @@ export class ChatMessagesService {
       await this.loadMessages();
 
       // comprobar si hay más mensajes para cargar
-      const hasMore = this.totalMessages() > newLimit;
-      console.log(`¿Hay más mensajes? ${hasMore}`);
-      return hasMore;
+      return this.totalMessages() > newLimit;
     } catch (error) {
       console.error('Error al cargar más mensajes', error);
-
       return false;
     }
   }
 
   async createMessage(text: string) {
     try {
-      const user = await firstValueFrom(this.authService.user$);
+      const user = this.authService.user();
       if (!user || !text) return false;
 
       const location = this.userLocation();
@@ -193,9 +175,6 @@ export class ChatMessagesService {
   }
 
   // método público para acceder a userLocation ya q está declarada como private
-  getUserLocation() {
-    return this.userLocation;
-  }
 
   async deleteAllMessages(): Promise<void> {
     try {
@@ -207,8 +186,19 @@ export class ChatMessagesService {
     }
   }
 
-  //método para obtener mensajes
-  getMessages() {
-    return this.messagesArray;
+  private async setLocation() {
+    try {
+      const permissionStatus = await Geolocation.checkPermissions();
+      if (permissionStatus.location === 'denied') {
+        await Geolocation.requestPermissions(); //
+      }
+
+      const locationName = await this.geoService.getLocationName();
+      this.userLocation.set(locationName);
+      console.log('Ubicación inicial:', locationName);
+    } catch (error) {
+      console.error('Error obteniendo ubicación:', error);
+      this.userLocation.set('Ubicación no disponible');
+    }
   }
 }

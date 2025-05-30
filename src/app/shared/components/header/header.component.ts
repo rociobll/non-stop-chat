@@ -1,4 +1,4 @@
-import { AsyncPipe, UpperCasePipe } from '@angular/common';
+import { UpperCasePipe } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
@@ -30,16 +30,15 @@ import { AuthService } from 'src/app/services/auth.service';
     IonButtons,
     IonToolbar,
     UpperCasePipe,
-    AsyncPipe,
   ],
 })
 export class HeaderComponent implements OnInit {
-  ngOnInit() {}
-
   private readonly auth = inject(AuthService);
-
   appName = signal('NonStopChat');
-  user$ = this.auth.user$;
+
+  user = this.auth.user;
+
+  ngOnInit() {}
 
   login() {
     this.auth.loginGoogle();
@@ -48,11 +47,6 @@ export class HeaderComponent implements OnInit {
   logOut() {
     this.auth.logOut();
   }
-
-
-
-
-
 
   handleImageError(event: any) {
     const imgElement = event.target;

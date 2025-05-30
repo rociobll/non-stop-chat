@@ -1,19 +1,19 @@
 <ion-content class="login-content">
   <!-- cuando hay usuario logueado se muestra una panatlla distinata de no logueado -->
-  @if(user$ | async; as user) {
+  @if(user()) {
   <div class="user-logged-container">
     <div class="left-page">
       <ion-avatar>
         <ion-img
-          [src]="user.photoURL"
+          [src]="user()!.photoURL"
           (ionError)="handleImageError($event)"
           alt="Avatar de usuario"
         >
         </ion-img>
       </ion-avatar>
       <ion-text>
-        <h6>{{ user.displayName}}</h6>
-        <p>{{ user.email }}</p>
+        <h6>{{ user()!.displayName}}</h6>
+        <p>{{ user()!.email }}</p>
       </ion-text>
 
       <ion-button class="log-out-button" expand="full" (click)="logOut()">
@@ -30,7 +30,7 @@
       ></ion-img>
 
       <ion-text>
-        <h3>Hola {{ user.displayName }}</h3>
+        <h3>Hola {{ user()!.displayName}}</h3>
         <h5>¿Quieres chatear con tus amigos?</h5>
       </ion-text>
       <ion-button

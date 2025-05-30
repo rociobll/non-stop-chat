@@ -1,4 +1,11 @@
-import { inject, Injectable, OnDestroy, signal } from '@angular/core';
+import {
+  DestroyRef,
+  inject,
+  Injectable,
+  OnDestroy,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import {
   Auth,
   authState,
@@ -10,36 +17,33 @@ import {
 } from '@angular/fire/auth';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService implements OnDestroy {
+export class AuthService {
   private readonly auth = inject(Auth);
-  private router = inject(Router);
+  private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
-  private userSubject = new BehaviorSubject<User | null>(null);
-  readonly user$ = this.userSubject.asObservable();
-  private userInfo = signal<User | null>(null); // signal para almacenar el usuario actual - lo usaré en el guard
+  user: WritableSignal<User | null> = signal(null);
 
-  private authSub!: Subscription;
+  userInfo = signal<User | null>(null); // signal para almacenar el usuario actual - lo usaré en el guard
 
   constructor() {
     //se puede usar en componentes con pipe async para saber si hay usuario conectado
-    this.authSub = authState(this.auth).subscribe((user) => {
-      // authState() devuelve observable que emite el usuario actual
-      this.userSubject.next(user); // actualiza BehaviorSubject con  usuario actual
-      this.userInfo.set(user);
-      if (user) {
-        localStorage.setItem('user', JSON.stringify(user));
-      } else {
-        localStorage.removeItem('user');
-      }
-    });
-  }
+    authState(this.auth)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((user) => {
+        // authState() devuelve observable que emite el usuario actual
+        this.user.set(user); // actualiza BehaviorSubject con  usuario actual
+        this.userInfo.set(user);
 
-  getUserInfo() {
-    return this.userInfo();
+        user
+          ? localStorage.setItem('user', JSON.stringify(user))
+          : localStorage.removeItem('user');
+      });
   }
 
   async loginGoogle(): Promise<User> {
@@ -69,9 +73,5 @@ export class AuthService implements OnDestroy {
       console.error('Error al desloguearse: ', error);
       throw error;
     }
-  }
-
-  ngOnDestroy(): void {
-    this.authSub?.unsubscribe();
   }
 }

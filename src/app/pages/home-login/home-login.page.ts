@@ -1,5 +1,6 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import {
   IonAvatar,
   IonButton,
@@ -8,11 +9,8 @@ import {
   IonIcon,
   IonImg,
   IonText,
-  IonCard,
 } from '@ionic/angular/standalone';
 import { AuthService } from 'src/app/services/auth.service';
-import { Router, RouterLink } from '@angular/router';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home-login',
@@ -20,8 +18,8 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./home-login.page.scss'],
   standalone: true,
   imports: [
+    CommonModule,
     RouterLink,
-    AsyncPipe,
     IonContent,
     IonText,
     CommonModule,
@@ -32,20 +30,16 @@ import { Subscription } from 'rxjs';
     IonFooter,
   ],
 })
-export class HomeLoginPage implements OnInit, OnDestroy {
+export class HomeLoginPage implements OnInit {
   private readonly auth = inject(AuthService);
-  private router = inject(Router);
+  private readonly router = inject(Router);
 
-  user$ = this.auth.user$;
-
-  private userSub!: Subscription;
+  user = this.auth.user;
 
   ngOnInit() {
-    this.userSub = this.user$.subscribe((user) => {
-      if (user) {
-        this.router.navigate(['/chat']);
-      }
-    });
+    if (this.user()) {
+      this.router.navigate(['/chat']);
+    }
   }
 
   login() {
@@ -55,13 +49,6 @@ export class HomeLoginPage implements OnInit, OnDestroy {
   logOut() {
     this.auth.logOut();
   }
-
-  ngOnDestroy() {
-    this.userSub?.unsubscribe();
-  }
-
-
-
 
   // Método para arreglar error carga de imagen de avatar
   handleImageError(event: any) {
