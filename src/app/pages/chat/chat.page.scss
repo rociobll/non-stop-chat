@@ -76,7 +76,6 @@
 }
 
 .right-page {
-
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -87,13 +86,13 @@
   position: relative;
 
   .messages-container {
-    margin-top:105px;
+    // margin-top:105px;
     flex: 1;
     display: flex;
     flex-direction: column;
     // flex-direction: column-reverse; //para q se vean ,mnsajes mas nuevos abajo y así ir al final del cont
     gap: 1rem;
-    padding-top: 2rem;
+    padding-top: 5rem;
     padding-left: 1rem;
     padding-right: 1rem;
     padding-bottom: 1rem;
@@ -108,40 +107,28 @@
       padding: 10px;
       background-color: #f4f1f1;
     }
-
-    ion-infinite-scroll {
-      // position: relative;
-      // order: 2;
-      // top: 0px;
-      width: 100%;
-      // // z-index: 1;
-      // // margin-top: 2rem;
-      background: rgb(255, 255, 255);
-      color: rgb(49, 18, 204);
+    .no-msgs {
+      color: black;
+      justify-content: center;
+      text-align: center;
+      padding: 10px;
+      background-color: #fbdcfd;
     }
 
-    // .loading-spinner {
-    //   margin-top: 25px;
-    //   position: relative;
-    //   // z-index: 1000;
-    //   font-size: 25px;
-    //   display: flex;
-    //   flex-direction: column;
-    //   align-items: center;
-    //   justify-content: center;
-    //   padding: 0rem;
+    ion-infinite-scroll {
+      width: 100%;
+      color: rgb(132, 8, 214);
+    }
 
-      // ion-spinner {
-      //   margin-bottom: 0.5rem;
-      //   margin-top: 100px;
-      // }
+    ion-infinite-scroll-content {
+      color: #be2ddb;
+    }
 
-      p {
-        color: var(--ion-color-primary);
-        font-size: 0.8rem;
-        margin: 0;
-      }
-
+    p {
+      color: var(--ion-color-primary);
+      font-size: 0.8rem;
+      margin: 0;
+    }
 
     // datos del mensaje que envío
     .message {
@@ -248,6 +235,7 @@
 
       .msg-empty {
         color: red;
+        font-size: 10px;
       }
 
       ion-input {
@@ -259,7 +247,6 @@
         --padding-top: 0.5rem;
         --padding-bottom: 0.5rem;
       }
-
 
       ion-button {
         --background: #be2ddb;

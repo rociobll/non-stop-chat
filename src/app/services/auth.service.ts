@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class AuthService implements OnDestroy {
-  private auth = inject(Auth);
+  private readonly auth = inject(Auth);
   private router = inject(Router);
 
   private userSubject = new BehaviorSubject<User | null>(null);
@@ -60,6 +60,8 @@ export class AuthService implements OnDestroy {
   }
 
   async logOut(): Promise<void> {
+    const confirmation = confirm('¿Estás seguro de que quieres cerrar sesión?');
+    if (!confirmation) return;
     try {
       await signOut(this.auth);
       await this.router.navigate(['/home-login']);

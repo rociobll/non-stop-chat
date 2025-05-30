@@ -43,7 +43,7 @@ export class ChatMessagesService {
       this.userLocation.set(locationName);
       console.log('Ubicación inicial:', locationName);
     } catch (error) {
-      console.error('Error configurando ubicación:', error);
+      console.error('Error obteniendo ubicación:', error);
       this.userLocation.set('Ubicación no disponible');
     }
   }
@@ -53,7 +53,7 @@ export class ChatMessagesService {
   }
 
   //obtener número de mensajes que hay en la base de datos realtime
-  private async updateTotalMessages(): Promise<number> {
+  async updateTotalMessages(): Promise<number> {
     return new Promise((resolve) => {
       const totalCountRef = query(
         ref(this.db, 'nscmessages'),
@@ -123,7 +123,7 @@ export class ChatMessagesService {
       console.log('Limites:', { old: oldLimit, new: newLimit });
       this.currentLimit.set(newLimit);
 
-      // Esperar 1,50s antes de cargar los mensajes asi spinner se muestra más tiempo
+      // Esperar 1,5s antes de cargar los mensajes asi spinner se muestra más tiempo
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
       await this.loadMessages();

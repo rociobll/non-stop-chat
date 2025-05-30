@@ -34,12 +34,8 @@ import { AuthService } from 'src/app/services/auth.service';
   ],
 })
 export class HeaderComponent implements OnInit {
-  constructor() {}
+  ngOnInit() {}
 
-  ngOnInit() {
-    const user = this.auth.getUserInfo();
-
-  }
   private readonly auth = inject(AuthService);
 
   appName = signal('NonStopChat');
@@ -47,14 +43,16 @@ export class HeaderComponent implements OnInit {
 
   login() {
     this.auth.loginGoogle();
-    console.log('Usuario autenticado', this.user$);
   }
 
   logOut() {
     this.auth.logOut();
-    console.log('Usuario deslogueado');
-    console.log(this.user$);
   }
+
+
+
+
+
 
   handleImageError(event: any) {
     const imgElement = event.target;

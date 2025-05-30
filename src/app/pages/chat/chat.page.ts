@@ -53,17 +53,20 @@ export class ChatPage implements OnInit {
   locationService = inject(GeolocationService);
 
   userInfo = this.authService.getUserInfo();
-  user: User | null = null;
+  // user: User | null = null;
   messageInput = new FormControl('', [Validators.required]);
   messages = this.chatService.getMessages();
   userLocation = signal<string>('');
+  allowAutoScroll = true;
   hasMoreMessages = false;
+  isLoadingMore = signal<boolean>(false);
+  isLoading = this.chatService.isLoading(); //señal desde el servicio
 
   @ViewChild(IonContent) content!: IonContent;
   @ViewChild(IonInfiniteScroll) infiniteScroll!: IonInfiniteScroll;
 
   async ngOnInit() {
-    this.user = this.userInfo;
+    // this.user = this.userInfo;
 
     if (this.userInfo) {
       try {
@@ -100,6 +103,13 @@ export class ChatPage implements OnInit {
 
   //método para cargar más mensajes - completar el evento de infinite scroll y deshabilitarlo si no hay más mensajes.
   loadMoreMessages(event: InfiniteScrollCustomEvent) {
+    if (this.isLoading) {
+      event.target.complete();
+      return;
+    }
+
+    this.isLoadingMore.set(true);
+
     this.content.getScrollElement().then((el) => {
       const previousHeight = el.scrollHeight;
 
@@ -108,18 +118,23 @@ export class ChatPage implements OnInit {
         this.hasMoreMessages = hasMore;
 
         setTimeout(() => {
-          event.target.complete(); //informa a componente q la carga se ha completado
           if (!hasMore) {
+            event.target.disabled = true;
             this.infiniteScroll.disabled = true;
+            this.isLoadingMore.set(false);
+            event.target.complete();
+            return;
           }
-          // Ajustar scroll para mantener la posición relativa
+          // ajusto scroll para mantener posición relativa
           this.content.getScrollElement().then((newEl) => {
             const newHeight = newEl.scrollHeight;
-            const heightDiff = newHeight - previousHeight; //scroll hacia abajo lo que creció el contenido
+            const scrollOffset = newHeight - previousHeight;
+            newEl.scrollTop += scrollOffset;
 
-            this.content.scrollByPoint(0, heightDiff, 0);
+            this.isLoadingMore.set(false);
+            event.target.complete(); //informa a componente q la carga se ha completado
           });
-        }, 100); // lo que tarda en ir a la posición scrollbypoint
+        }, 100); // lo que tarda en ir a la posición relativa
       });
     });
   }
@@ -134,16 +149,21 @@ export class ChatPage implements OnInit {
         await this.chatService.createMessage(text);
         this.messageInput.reset();
         this.chatService.currentLimit.set(10); //cuando se envia nuevo mensaje, reiniciamos limite a 10 para que cargue los ultomos10 mensajes denuevo
+
+        await this.chatService.loadMessages(); //volver a cargar mensaje con limit 10
+
+        if (this.infiniteScroll) {
+          const hasMore =
+            this.chatService.totalMessages() > this.chatService.currentLimit();
+          this.infiniteScroll.disabled = !hasMore;
+          this.hasMoreMessages = hasMore;
+        }
+        // this.infiniteScroll.disabled = false; //se habilita elscroll visualmente
         setTimeout(() => {
           this.scrollToBottom();
         }, 100);
-        this.chatService.loadMessages(); //volver a cargar mensaje con limit 10
 
-        this.hasMoreMessages = true; // Reactivar el scroll infinito, si no al limitar a 10 y load no hace scroll y carga pq tenia desactivado el scroll event al final de mensajes
-
-        if (this.infiniteScroll) {
-          this.infiniteScroll.disabled = false; //se habilita elscroll visualmente
-        }
+        // }
       } catch (error) {
         console.error('Error enviando mensaje:', error);
       }
@@ -160,9 +180,6 @@ export class ChatPage implements OnInit {
   }
 
   logOut() {
-    const confirmation = confirm('¿Estás seguro de que quieres cerrar sesión?');
-    if (!confirmation) return;
-
     this.authService.logOut();
   }
 

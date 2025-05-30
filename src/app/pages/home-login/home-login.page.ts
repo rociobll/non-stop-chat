@@ -53,15 +53,15 @@ export class HomeLoginPage implements OnInit, OnDestroy {
   }
 
   logOut() {
-    const confirmation = confirm('¿Estás seguro de que quieres cerrar sesión?');
-    if (!confirmation) return;
-
     this.auth.logOut();
   }
 
   ngOnDestroy() {
     this.userSub?.unsubscribe();
   }
+
+
+
 
   // Método para arreglar error carga de imagen de avatar
   handleImageError(event: any) {
