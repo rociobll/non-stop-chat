@@ -37,14 +37,10 @@ export class HomeLoginPage implements OnInit {
   user = this.auth.user;
 
   ngOnInit() {
-    console.log('User:', this.user());
 
-    setTimeout(() => {
-      console.log('User:', this.auth.getUser());
-      if (this.auth.getUser()) {
+      if (this.user()) {
         this.router.navigate(['/chat']);
       }
-    }, 2000); // Espera 1 segundo antes de verificar el estado del usuario
   }
 
   login() {

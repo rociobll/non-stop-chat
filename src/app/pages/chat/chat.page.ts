@@ -68,7 +68,6 @@ export class ChatPage implements OnInit {
   isLoadingMore = signal<boolean>(false);
 
   async ngOnInit() {
-    // this.user = this.userInfo;
     if (!this.userInfo()) return;
 
     try {
