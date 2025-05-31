@@ -36,6 +36,7 @@ export class AuthService {
     authState(this.auth)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((user) => {
+        console.log('Auth State User:', user);
         // authState() devuelve observable que emite el usuario actual
         this.user.set(user); // actualiza BehaviorSubject con  usuario actual
         this.userInfo.set(user);
@@ -44,6 +45,10 @@ export class AuthService {
           ? localStorage.setItem('user', JSON.stringify(user))
           : localStorage.removeItem('user');
       });
+  }
+
+  getUser() {
+    return this.userInfo();
   }
 
   async loginGoogle(): Promise<User> {

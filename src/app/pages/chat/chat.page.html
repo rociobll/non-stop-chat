@@ -58,6 +58,8 @@
           position="top"
           (ionInfinite)="loadMoreMessages($event)"
           threshold="15%"
+          [disabled]="!hasMoreMessages"
+          threshold="20%"
         >
           <ion-infinite-scroll-content
             loadingSpinner="lines-sharp"
